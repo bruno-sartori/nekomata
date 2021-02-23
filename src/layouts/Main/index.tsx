@@ -1,5 +1,5 @@
 import Navbar from '../../containers/Navbar';
-import Sidebar from '../../containers/Navbar/Sidebar';
+import Sidebar from '../../containers/Sidebar';
 
 const MainLayout = (props: any) => {
     return (
