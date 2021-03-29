@@ -1,3 +1,5 @@
+import React from 'react';
+import SidebarListItem from '@components/SidebarListItem';
 
 import './index.scss';
 
