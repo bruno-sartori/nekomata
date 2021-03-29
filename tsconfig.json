@@ -11,6 +11,9 @@
       "@public/*": [
         "public/*"
       ],
+      "@images/*": [
+        "src/assets/images/*"
+      ],
       "@components/*": [
         "src/components/*"
       ],
@@ -20,16 +23,28 @@
       "@layouts/*": [
         "src/layouts/*"
       ],
-      "@images/*": [
-        "src/images/*"
-      ],
       "@pages/*": [
         "src/pages/*"
       ],
       "@scenes/*": [
         "src/scenes/*"
       ],
-     "@styles/*": [
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@store/*": [
+        "src/store/*"
+      ],
+      "@actions/*": [
+        "src/store/actions/*"
+      ],
+      "@reducers/*": [
+        "src/store/reducers/*"
+      ],
+      "@selectors/*": [
+        "src/store/selectors/*"
+      ],
+      "@styles/*": [
         "src/styles/*"
       ],
       "@utils/*": [

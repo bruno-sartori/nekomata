@@ -32,8 +32,8 @@ require('dotenv').config({ path: getEnvPath() });
 module.exports = withPlugins([
   nextEnv(),
   withCSS(
-    withSass(
-      withImages({
+    withSass({
+      //withImages({
         webpack(config) {
           // Returns environment variables as an object
           const env = Object.keys(process.env).reduce((acc, curr) => {
@@ -43,14 +43,22 @@ module.exports = withPlugins([
           // Allows you to create global constants which can be configured
           // at compile time, which in our case is our environment variables
           config.plugins.push(new webpack.DefinePlugin(env));
-
+          
+          config.module.rules.push({
+            test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+            loader: 'url-loader',
+            options: {
+              esModule: false
+            }
+          });
           // specific alias for sass
-          config.resolve.alias['images'] = path.resolve(__dirname, './src/images/');
+          config.resolve.alias['images'] = path.resolve(__dirname, './src/assets/images/');
           config.resolve.alias['styles'] = path.resolve(__dirname, './src/styles/');
+
 
           return config;
         }
       })
-    )
+    //)
   )
 ]);

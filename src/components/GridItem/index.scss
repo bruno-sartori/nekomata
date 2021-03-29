@@ -1,17 +1,33 @@
 @import '~styles/mixins';
+@import '~styles/variables';
 
 .grid-item {
-  @for $i from 1 through 12 {
-    @for $j from 1 through 12 {
-      &--#{$i}--#{$j} {
-        grid-column: $i / span $j;
+  padding: $grid-padding;
+
+  @for $i from 0 through $grid-columns {
+    @for $j from 0 through $grid-columns {
+      $col-start: $i + 1;
+      $col-end: $j + 1;
+
+      &__col--#{$i}--#{$j} {
+        grid-column: #{$col-start} / #{$col-end};
       }
     }
   }
-  // @for $i from 1 through 12 {
-  //  &:nth-child(#{$i}) {
-  //    grid-column-start: $i;
-  //  };
-  //}
+
+  @for $i from 0 through $grid-rows {
+    @for $j from 0 through $grid-rows {
+      $row-start: $i + 1;
+      $row-end: $j + 1;
+
+      &__row--#{$i}--#{$j} {
+        grid-row: #{$row-start} / #{$row-end};
+      }
+    }
+  }
+
+  @include mobile-portrait {
+    grid-column: 1 / span $grid-responsive-columns;
+  }
 }
 

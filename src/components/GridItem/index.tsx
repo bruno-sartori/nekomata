@@ -1,20 +1,36 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 
 import './index.scss';
 
 declare interface IGridItem {
+  children: any;
   colStart: number;
   colEnd: number;
-  children: any;
   rowStart?: number;
   rowEnd?: number;
+  className?: string;
+  style?: CSSProperties;
 }
 
 const GridItem = (props: IGridItem) => {
-  const { rowStart, rowEnd, colStart, colEnd, children } = props;
+  const { 
+    children, 
+    colStart, 
+    colEnd, 
+    rowStart, 
+    rowEnd, 
+    className = '', 
+    style = {} 
+  } = props;
+
+  const colClassName = `grid-item__col--${colStart}--${colEnd}`;
+  const rowClassName = (rowStart && rowEnd) ? `grid-item__row--${rowStart}--${rowEnd}` : '';
 
   return (
-    <div className={`grid-item grid-item--${colStart}--${colEnd}`}>
+    <div 
+      className={`grid-item ${colClassName} ${rowClassName} ${className}`} 
+      style={style}
+    >
       {children}
     </div>
   );

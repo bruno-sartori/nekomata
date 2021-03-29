@@ -1,27 +1,21 @@
 import React from 'react';
+import LoginBannerLogo from '@images/psychologist.png';
 
 import './index.scss';
 
-declare interface ILoginBanner {
-  title: string;
-  imageUrl: string;
-  copyright: string;
-};
-
-const LoginBanner = (props: ILoginBanner) => {
-  const { title, imageUrl, copyright } = props;
-
+const LoginBanner = () => {
   return (
     <div className="login-banner">
       <h1 className="login-banner__title">
-        {title}
+        Nekomata Labs
       </h1>
       <figure className="login-banner__image">
-        <img src={imageUrl} width={100} height={100} />
+        <a style={{ display: 'none' }} href='https://pngtree.com/so/psychological-disorder'>psychological disorder png from pngtree.com</a>
+        <img src={LoginBannerLogo} width={300} height={300} />
       </figure>
-      <span className="login-banner__copyright">
-        {copyright}
-      </span>
+      <p className="login-banner__copyright">
+        Copyright &copy; 2021. Nekomata Labs. All rights reserved.
+      </p>
     </div>
   );
 };
