@@ -1,0 +1,17 @@
+@import '~styles/mixins';
+
+.grid-item {
+  @for $i from 1 through 12 {
+    @for $j from 1 through 12 {
+      &--#{$i}--#{$j} {
+        grid-column: $i / span $j;
+      }
+    }
+  }
+  // @for $i from 1 through 12 {
+  //  &:nth-child(#{$i}) {
+  //    grid-column-start: $i;
+  //  };
+  //}
+}
+

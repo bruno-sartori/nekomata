@@ -1,0 +1,11 @@
+@import '~styles/mixins';
+
+.grid-container {
+  display: grid;
+  grid-gap: 30px;
+  grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto;
+
+  @include mobile-portrait {
+    grid-template-columns: auto auto auto auto;  
+  }
+}
