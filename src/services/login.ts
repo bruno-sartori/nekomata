@@ -1,20 +1,8 @@
-import { getJson } from '@utils/http';
+import Request from '@utils/request';
 
 export async function signIn(loginFormFields: ILoginFormFields) {
-  const options: RequestInit = {
-    body: JSON.stringify(loginFormFields),
-    credentials: 'include',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    mode: 'cors',
-  };
-
-  const signInUrl = `/api/login`;
-
-  const response = await getJson(signInUrl, options) as ILoginResult;
+  const url = `/login`;
+  const response = await Request.post(url, loginFormFields) as ILoginResult;
 
   return response.data;
 }

@@ -7,9 +7,10 @@ import Card from '@components/Card';
 // Styles
 import './index.scss';
 import TextField from '@components/TextField';
+import Button from '@components/Button';
 
 declare interface ILoginForm {
-  onSubmit: () => void;
+  onSubmit: (e: any) => void;
 }
 
 const LoginForm = (props: ILoginForm) => {
@@ -32,10 +33,10 @@ const LoginForm = (props: ILoginForm) => {
             label="Senha"
             name='password'
             component={TextField}
-            type="text"
+            type="password"
           />
 
-          <button type="submit">Sign In</button>
+          <Button type="submit" title="Sign In" />
 
         </form>
       </Card>

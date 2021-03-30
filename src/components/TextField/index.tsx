@@ -21,16 +21,21 @@ const TextField = (props: ITextField) => {
   } = props;
 
 
-  console.log(input);
+  const errorClass = !input.disabled && touched && error ? 'text-field--error' : '';
 
   return (
-    <div className={`text-field ${className}`}>
-      <label htmlFor={label} className={`text-field__label ${input.disabled ? 'text-field__label--disabled' : ''}`}>{label}</label>
+    <div className={`text-field ${errorClass} ${className}`}>
+      <label 
+        htmlFor={label}
+        className={`text-field__label ${input.disabled ? 'text-field__label--disabled' : ''}`}
+      >
+        {label}
+      </label>
       <input 
-        className={!input.disabled && touched && error ? 'text-field--error' : ''} 
         id={label} 
+        type={type}
+        readOnly={readOnly}
         {...input} 
-        type={type} readOnly={readOnly}
       />
       {!input.disabled && touched && error && (
         <span className="text-field__validation-text">{error}</span>

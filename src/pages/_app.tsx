@@ -15,6 +15,19 @@ function NekomataApp({ Component, pageProps, store }) {
   );
 }
 
+
+ NekomataApp.getInitialProps = async (appCtx: any) => {
+  const { Component, ctx } = appCtx;
+
+  const pageProps = Component.getInitialProps
+    ? await Component.getInitialProps(ctx)
+    : {};
+
+  return {
+    pageProps
+  };
+}
+
 const enhance = compose(
   withRedux(initializeStore)
 );

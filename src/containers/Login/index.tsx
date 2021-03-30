@@ -42,12 +42,13 @@ const FORM_NAME = 'login';
 
 const LoginContainer = (props: ILoginContainerProps) => {
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     const { logIn, router, loginFormFields } = props;
     
     logIn(loginFormFields, (error: any) => {
       if (error) {
-        console.error(error);
+        console.error(error); // TODO: change to logger
       } else {
         router.push('/');
       }
@@ -72,7 +73,7 @@ const LoginContainer = (props: ILoginContainerProps) => {
 
 
 const mapStateToProps = (state: any, ownProps: any) => {
-  const loginFormFields = formValueSelector(FORM_NAME)(state, 'userName', 'Password');
+  const loginFormFields = formValueSelector(FORM_NAME)(state, 'userName', 'password');
   const formErrors = getFormSyncErrors(FORM_NAME)(state);
   const loginState = loginSelector(state);
   

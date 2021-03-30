@@ -34,7 +34,7 @@ module.exports = withPlugins([
   withCSS(
     withSass({
       //withImages({
-        webpack(config) {
+        webpack(config, { isServer }) {
           // Returns environment variables as an object
           const env = Object.keys(process.env).reduce((acc, curr) => {
             acc[`process.env.${curr}`] = JSON.stringify(process.env[curr]);
@@ -54,6 +54,13 @@ module.exports = withPlugins([
           // specific alias for sass
           config.resolve.alias['images'] = path.resolve(__dirname, './src/assets/images/');
           config.resolve.alias['styles'] = path.resolve(__dirname, './src/styles/');
+
+        // Fixes npm packages that depend on `fs` module
+        if (!isServer) {
+          config.node = {
+            fs: 'empty'
+          }
+        }
 
 
           return config;

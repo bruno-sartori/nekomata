@@ -7,7 +7,6 @@ export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
 export const CLEAR_LOGIN = 'CLEAR_LOGIN';
 
-
 const loginSuccess = (payload) => ({
   type: LOGIN_SUCCESS,
   payload
@@ -16,6 +15,10 @@ const loginSuccess = (payload) => ({
 const loginFailure = (payload) => ({
   type: LOGIN_FAILURE,
   payload
+});
+
+const loginRequesting = () => ({
+  type: LOGIN_REQUESTING
 });
 
 export function clearLogin() {
@@ -27,6 +30,7 @@ export function clearLogin() {
 export function loginAction(loginFormFields: ILoginFormFields, callback: any) {
   return async (dispatch: any, getState: () => any) => {
     try {
+      await dispatch(loginRequesting());
       const response = await signIn(loginFormFields);
       await dispatch(loginSuccess(response));
       return callback();

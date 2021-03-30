@@ -6,14 +6,15 @@ import {
   LOGIN_SUCCESS,
 } from '@actions/login';
 
-const INITIAL_STATE = {
+const INITIAL_STATE: ILoginState = {
   error: null,
   initialized: false,
   isRequesting: false,
-  response: {},
+  isLoggedIn: false,
+  authToken: null,
 };
 
-const loginReducer = (state: any = INITIAL_STATE, action: any) => {
+const loginReducer = (state: ILoginState = INITIAL_STATE, action: any) => {
   switch (action.type) {
     case LOGIN_SUCCESS:
       return {
@@ -21,7 +22,8 @@ const loginReducer = (state: any = INITIAL_STATE, action: any) => {
         error: null,
         initialized: true,
         isRequesting: false,
-        response: action.payload,
+        isLoggedIn: true,
+        authToken: action.payload.token
       };
 
     case LOGIN_REQUESTING:
@@ -35,7 +37,8 @@ const loginReducer = (state: any = INITIAL_STATE, action: any) => {
         ...state,
         error: action.error,
         isRequesting: false,
-        response: {},
+        isLoggedIn: false,
+        authToken: null,
       };
 
     case CLEAR_LOGIN:
