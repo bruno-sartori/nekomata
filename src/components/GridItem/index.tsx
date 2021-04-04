@@ -1,35 +1,36 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
+import { isUndefined } from '../../utils/isValidVariable';
 
 import './index.scss';
 
 declare interface IGridItem {
   children: any;
-  colStart: number;
-  colEnd: number;
-  rowStart?: number;
-  rowEnd?: number;
+  colSpan: number;
+  rowSpan?: number;
   className?: string;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
 }
 
 const GridItem = (props: IGridItem) => {
-  const { 
-    children, 
-    colStart, 
-    colEnd, 
-    rowStart, 
-    rowEnd, 
-    className = '', 
-    style = {} 
+  const {
+    children,
+    colSpan,
+    rowSpan,
+    className = '',
+    style = {}
   } = props;
 
-  const colClassName = `grid-item__col--${colStart}--${colEnd}`;
-  const rowClassName = (rowStart && rowEnd) ? `grid-item__row--${rowStart}--${rowEnd}` : '';
+  const colSpanClassName = `grid-item__col--${colSpan}`;
+
+  const rowSpanStyle: React.CSSProperties = isUndefined(rowSpan) ? {} : { gridRow: `span ${rowSpan}` };
 
   return (
-    <div 
-      className={`grid-item ${colClassName} ${rowClassName} ${className}`} 
-      style={style}
+    <div
+      className={`grid-item ${colSpanClassName} ${className}`}
+      style={{
+        ...rowSpanStyle,
+        ...style
+      }}
     >
       {children}
     </div>

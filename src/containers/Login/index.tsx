@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { withCookies, ReactCookieProps, Cookies } from 'react-cookie';
 import { withRouter } from 'next/router';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { formValueSelector, InjectedFormProps, getFormSyncErrors, reduxForm } from 'redux-form';
@@ -26,14 +27,14 @@ declare interface ILoginFormProps {
   loginFormFields: ILoginFormFields; 
 } 
 declare interface IInjectedProps extends InjectedFormProps<ILoginFormFields, ILoginFormProps> { }
-declare interface ILoginContainerComponentProps extends WithRouterProps, IInjectedProps, ILoginFormProps { }
+declare interface ILoginContainerComponentProps extends WithRouterProps, ReactCookieProps, IInjectedProps, ILoginFormProps { }
 declare interface ILoginContainerStateProps {
   isLoggedIn: boolean;
   loginState: any;
   formErrors: any;
 }
 declare interface ILoginContainerDispatchProps {
-  logIn: (loginFormFields: ILoginFormFields, callback: any) => void;
+  logIn: (loginFormFields: ILoginFormFields, cookies: Cookies, callback: any) => void;
   clearSignIn: () => void;
 }
 declare interface ILoginContainerProps extends ILoginContainerComponentProps, ILoginContainerStateProps, ILoginContainerDispatchProps {}
@@ -44,9 +45,9 @@ const LoginContainer = (props: ILoginContainerProps) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { logIn, router, loginFormFields } = props;
+    const { logIn, router, loginFormFields, cookies } = props;
     
-    logIn(loginFormFields, (error: any) => {
+    logIn(loginFormFields, cookies, (error: any) => {
       if (error) {
         console.error(error); // TODO: change to logger
       } else {
@@ -58,10 +59,10 @@ const LoginContainer = (props: ILoginContainerProps) => {
   return (
     <section className="login-container">
       <GridContainer rows={1} gridGap={0}>
-        <GridItem colStart={0} colEnd={6} className="login-container__left-section">
+        <GridItem colSpan={6} className="login-container__left-section">
           <LoginBanner />
         </GridItem>
-        <GridItem colStart={6} colEnd={12} className="login-container__right-section">
+        <GridItem colSpan={6} className="login-container__right-section">
           <LoginForm 
             onSubmit={handleSubmit}
           />
@@ -86,9 +87,9 @@ const mapStateToProps = (state: any, ownProps: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return ({
-    logIn: (loginFormFields: ILoginFormFields, callback: any) => {
+    logIn: (loginFormFields: ILoginFormFields, cookies: Cookies, callback: any) => {
       dispatch(clearLogin());
-      dispatch(loginAction(loginFormFields, callback));
+      dispatch(loginAction(loginFormFields, cookies, callback));
     },
     clearLogin: () => {
       dispatch(clearLogin());
@@ -101,5 +102,5 @@ export default reduxForm<ILoginFormFields>({
   validate: validateLoginForm,
   enableReinitialize: true,
   keepDirtyOnReinitialize: true,
-})(connect(mapStateToProps, mapDispatchToProps)(withRouter<ILoginContainerProps>(LoginContainer)));
+})(connect(mapStateToProps, mapDispatchToProps)(withRouter<ILoginContainerProps>(withCookies(LoginContainer))));
 

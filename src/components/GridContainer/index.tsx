@@ -1,19 +1,19 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import './index.scss';
 
 declare interface IGridContainer {
-  rows: number;
+  rows?: number;
   children: any;
   gridGap?: number;
   className?: string;
-  style?: CSSProperties;
+  style?: React.CSSProperties;
 }
 
 const GridContainer = (props: IGridContainer) => {
-  const { rows, children, gridGap = 30, className = '', style = {} } = props;
+  const { rows = 1, children, gridGap = 30, className = '', style = {} } = props;
 
   return (
-    <div 
+    <div
       className={`grid-container grid-container--rows--${rows} ${className}`}
       style={{ ...style, gridGap }}
     >

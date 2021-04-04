@@ -5,29 +5,15 @@
   padding: $grid-padding;
 
   @for $i from 0 through $grid-columns {
-    @for $j from 0 through $grid-columns {
-      $col-start: $i + 1;
-      $col-end: $j + 1;
+    $col-span: $i;
 
-      &__col--#{$i}--#{$j} {
-        grid-column: #{$col-start} / #{$col-end};
-      }
-    }
-  }
-
-  @for $i from 0 through $grid-rows {
-    @for $j from 0 through $grid-rows {
-      $row-start: $i + 1;
-      $row-end: $j + 1;
-
-      &__row--#{$i}--#{$j} {
-        grid-row: #{$row-start} / #{$row-end};
-      }
+    &__col--#{$i} {
+      grid-column: span #{$col-span};
     }
   }
 
   @include mobile-portrait {
-    grid-column: 1 / span $grid-responsive-columns;
+    grid-column: span 12;
   }
 }
 

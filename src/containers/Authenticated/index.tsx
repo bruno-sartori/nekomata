@@ -1,11 +1,11 @@
-import React from 'react';
 import { WithRouterProps } from 'next/dist/client/with-router';
 import { withRouter } from 'next/router';
 import { connect } from 'react-redux';
+import { withCookies, ReactCookieProps } from 'react-cookie';
 import { loginSelector } from '@store/selectors/login';
 import { isServerSide } from '@utils/isServerSide';
 
-declare interface IAuthenticatedComponentProps extends WithRouterProps {
+declare interface IAuthenticatedComponentProps extends ReactCookieProps, WithRouterProps {
   children: any;
 }
 
@@ -16,8 +16,8 @@ declare interface IAuthenticatedStateProps {
 declare interface IAuthenticatedProps extends IAuthenticatedComponentProps, IAuthenticatedStateProps { }
 
 const Authenticated = (props: IAuthenticatedProps) => {
-  const { children, loginState: { isLoggedIn, authToken }, router } = props;
-  const hasAuth = () => (isLoggedIn && authToken !== null);
+  const { children, loginState: { isLoggedIn, authToken }, router, cookies } = props;
+  const hasAuth = () => (cookies && cookies.get('authToken'));
 
   if (isServerSide() || hasAuth()) {
     return children;
@@ -36,4 +36,4 @@ const mapStateToProps = (state: any, ownProps: any) => {
   });
 };
 
-export default withRouter<IAuthenticatedComponentProps>(connect(mapStateToProps)(Authenticated));
+export default withRouter<IAuthenticatedComponentProps>(connect(mapStateToProps)(withCookies(Authenticated)));

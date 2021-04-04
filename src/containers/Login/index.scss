@@ -3,6 +3,7 @@
 .login-container {
   width: 800px;
   margin: auto;
+  z-index: 2;
   
   &__left-section {
     background-image: linear-gradient(140deg, hsl(206deg 100% 75%), hsl(223deg 100% 66%));

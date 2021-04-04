@@ -1,5 +1,6 @@
 // Services
 import { signIn } from '@services/login';
+import Cookies from 'universal-cookie';
 
 // Constants
 export const LOGIN_REQUESTING = 'LOGIN_REQUESTING';
@@ -27,12 +28,13 @@ export function clearLogin() {
   }
 };
 
-export function loginAction(loginFormFields: ILoginFormFields, callback: any) {
+export function loginAction(loginFormFields: ILoginFormFields, cookies: Cookies, callback: any) {
   return async (dispatch: any, getState: () => any) => {
     try {
       await dispatch(loginRequesting());
       const response = await signIn(loginFormFields);
       await dispatch(loginSuccess(response));
+      cookies.set('authToken', response.token);
       return callback();
     } catch (error) {
       await dispatch(loginFailure(error));

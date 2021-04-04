@@ -1,0 +1,53 @@
+@import '~styles/colors';
+
+.sidebar-item {
+  margin-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+
+  &__container {
+    padding: 10px;
+  }
+
+  &__icon {
+    display: inline-block;
+    margin-left: 5px;
+    width: 30px;
+    height: 30px;
+    padding: 4px;
+    border-radius: 100%;
+    background-color: #fff;
+    text-align: center;
+    color: $blue;
+    box-shadow: 1px 4px 9px -5px $black;
+
+    svg {
+      vertical-align: middle;
+    }
+  }
+
+  &__title {
+    display: inline-block;
+    margin-left: 20px;
+    font-weight: 500;
+    color: $black;
+  }
+
+  &--active {
+    .sidebar-item {
+      &__container {
+        background-color: $blue;
+        box-shadow: 2px 10px 17px -7px #2b50cc;
+        border-radius: 15px;
+      }
+  
+      &__icon {
+        color: $black;
+      }
+  
+      &__title {
+        color: $white;
+      }
+    }
+  }
+}

@@ -8,6 +8,9 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.35",
+    "@fortawesome/free-solid-svg-icons": "^5.15.3",
+    "@fortawesome/react-fontawesome": "^0.1.14",
     "@types/lodash": "^4.14.168",
     "@types/next-redux-wrapper": "^3.0.0",
     "@types/redux": "^3.6.0",
@@ -28,6 +31,7 @@
     "next-redux-wrapper": "^4.0.1",
     "qs": "^6.10.1",
     "react": "17.0.1",
+    "react-cookie": "^4.0.3",
     "react-dom": "17.0.1",
     "react-redux": "^7.2.3",
     "redux": "^4.0.5",

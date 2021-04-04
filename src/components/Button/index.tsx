@@ -10,7 +10,7 @@ declare interface IButton {
   style?: CSSProperties;
 }
 
-const Button = (props) => {
+const Button = (props: IButton) => {
   const { type, className, onClick, title, style } = props;
 
   return (
