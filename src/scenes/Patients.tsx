@@ -1,10 +1,10 @@
-import MainLayout from '@layouts/Main';
-import Dashboard from '@containers/Dashboard';
+import MainLayout from '../layouts/Main';
 
 const PatientsScene = () => {
+
   return (
     <MainLayout>
-      <Dashboard />
+      <div>patients</div>
     </MainLayout>
   );
 };

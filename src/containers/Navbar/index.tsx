@@ -10,7 +10,7 @@ declare interface INavbarProps extends INavbarComponentProps {
 
 }
 
-const Navbar: React.FC<INavbarProps> = (props: INavbarProps) => {
+const Navbar: React.FC<INavbarProps> = (_props: INavbarProps) => {
 
   return (
     <nav className="navbar">

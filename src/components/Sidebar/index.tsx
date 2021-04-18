@@ -1,32 +1,35 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee, faHome, faHospitalUser, faLock } from '@fortawesome/free-solid-svg-icons'
+import { WithRouterProps } from 'next/dist/client/with-router';
+import { withRouter } from 'next/router';
 
 // Components
-import SidebarItem from '@components/SidebarItem';
+import SidebarItem, { ISidebarItemProps } from '@components/SidebarItem';
 
 // Images
-import Logo from '@images/logo.jpg';
+import Logo from '@images/logo.png';
 
 // Styles
 import './index.scss';
 
-const Sidebar = (props: any) => {
+interface ISidebarProps extends WithRouterProps {
+  menuItems: Array<ISidebarItemProps>;
+}
+
+const Sidebar = (props: ISidebarProps) => {
+  const { menuItems = [] } = props;
 
   return (
     <section className="sidebar">
       <div className="sidebar__logo">
         <figure>
-          <img src={Logo} width={50} height={50} />
+          <img src={Logo} width={70} height={70} />
         </figure>
       </div>
       <ul className="sidebar__list">
-        <SidebarItem icon={<FontAwesomeIcon icon={faHome} />} title="Home" href="/" />
-        <SidebarItem icon={<FontAwesomeIcon icon={faHospitalUser} />} title="Pacientes" href="/patient" />
-        <SidebarItem icon={<FontAwesomeIcon icon={faLock} />} title="Bloqueados" href="/blocked" />
+        {menuItems.map(item => <SidebarItem key={item.title} {...item} />)}
       </ul>
     </section>
   );
 };
 
-export default Sidebar;
+export default withRouter(Sidebar);

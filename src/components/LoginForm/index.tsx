@@ -9,7 +9,7 @@ import './index.scss';
 import TextField from '@components/TextField';
 import Button from '@components/Button';
 
-declare interface ILoginForm {
+interface ILoginForm {
   onSubmit: (e: any) => void;
 }
 

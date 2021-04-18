@@ -73,7 +73,7 @@ const LoginContainer = (props: ILoginContainerProps) => {
 };
 
 
-const mapStateToProps = (state: any, ownProps: any) => {
+const mapStateToProps = (state: any) => {
   const loginFormFields = formValueSelector(FORM_NAME)(state, 'userName', 'password');
   const formErrors = getFormSyncErrors(FORM_NAME)(state);
   const loginState = loginSelector(state);

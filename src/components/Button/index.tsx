@@ -2,7 +2,7 @@ import React, { CSSProperties } from 'react';
 
 import './index.scss';
 
-declare interface IButton {
+interface IButton {
   type: 'button'|'submit'|'reset';
   onClick?: () => void;
   title: string;

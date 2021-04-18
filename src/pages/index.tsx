@@ -2,7 +2,7 @@ import Authenticated from '@containers/Authenticated';
 import { getUserInfoAction } from '@store/actions/user';
 import HomeScene from '../scenes/Home';
 
-const HomePage = (props: any) => {
+const HomePage = () => {
   return (
     <Authenticated>
       <HomeScene />

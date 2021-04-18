@@ -1,9 +1,8 @@
 import React from 'react';
-import { isUndefined } from '../../utils/isValidVariable';
 
 import './index.scss';
 
-declare interface IGridItem {
+interface IGridItem {
   children: any;
   colSpan: number;
   rowSpan?: number;
@@ -22,7 +21,7 @@ const GridItem = (props: IGridItem) => {
 
   const colSpanClassName = `grid-item__col--${colSpan}`;
 
-  const rowSpanStyle: React.CSSProperties = isUndefined(rowSpan) ? {} : { gridRow: `span ${rowSpan}` };
+  const rowSpanStyle: React.CSSProperties = typeof rowSpan === 'undefined' ? {} : { gridRow: `span ${rowSpan}` };
 
   return (
     <div

@@ -1,7 +1,7 @@
 import React from 'react';
 import './index.scss';
 
-declare interface IGridContainer {
+interface IGridContainer {
   rows?: number;
   children: any;
   gridGap?: number;

@@ -16,7 +16,7 @@ declare interface IAuthenticatedStateProps {
 declare interface IAuthenticatedProps extends IAuthenticatedComponentProps, IAuthenticatedStateProps { }
 
 const Authenticated = (props: IAuthenticatedProps) => {
-  const { children, loginState: { isLoggedIn, authToken }, router, cookies } = props;
+  const { children, router, cookies } = props;
   const hasAuth = () => (cookies && cookies.get('authToken'));
 
   if (isServerSide() || hasAuth()) {
@@ -28,7 +28,7 @@ const Authenticated = (props: IAuthenticatedProps) => {
 }
 
 
-const mapStateToProps = (state: any, ownProps: any) => {
+const mapStateToProps = (state: any) => {
   const loginState = loginSelector(state);
 
   return ({

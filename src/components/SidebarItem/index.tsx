@@ -1,19 +1,18 @@
-import { WithRouterProps } from 'next/dist/client/with-router';
-import { withRouter } from 'next/router';
 import React from 'react';
 import './index.scss';
 
-declare interface ISidebarItem extends WithRouterProps {
+export interface ISidebarItemProps {
   title: string;
   href: string;
   icon: any;
+  active?: boolean;
 }
 
-const SidebarItem: React.FC<ISidebarItem> = (props) => {
-  const { title, href, icon, router } = props;
+const SidebarItem: React.FC<ISidebarItemProps> = (props) => {
+  const { title, href, icon, active = false } = props;
 
   return (
-    <li className={`sidebar-item  ${href === router.asPath ? 'sidebar-item--active' : ''}`}>
+    <li className={`sidebar-item  ${active ? 'sidebar-item--active' : ''}`}>
       <a href={href}>
         <div className="sidebar-item__container">
           <div className="sidebar-item__icon">
@@ -22,10 +21,20 @@ const SidebarItem: React.FC<ISidebarItem> = (props) => {
           <div className="sidebar-item__title">
             {title}
           </div>
+          {active && (
+            <>
+              <div className="top-wave">
+                <div className="top-wave-border" />
+              </div>
+              <div className="bottom-wave">
+                <div className="bottom-wave-border" />
+              </div>
+            </>
+          )}
         </div>
       </a>
     </li>
   );
 }
 
-export default withRouter(SidebarItem);
+export default SidebarItem;

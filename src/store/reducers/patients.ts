@@ -1,10 +1,10 @@
 // Constants
 import {
-  CLEAR_USER_INFO,
-  USER_INFO_FAILURE,
-  USER_INFO_REQUESTING,
-  USER_INFO_SUCCESS,
-} from '@actions/user';
+  CLEAR_PATIENTS,
+  PATIENTS_FAILURE,
+  PATIENTS_REQUESTING,
+  PATIENTS_SUCCESS,
+} from '@actions/patients';
 
 const INITIAL_STATE = {
   error: null,
@@ -14,21 +14,22 @@ const INITIAL_STATE = {
 
 const userReducer = (state: any = INITIAL_STATE, action: any) => {
   switch (action.type) {
-    case USER_INFO_SUCCESS:
+    case PATIENTS_SUCCESS:
       return {
         ...state,
         error: null,
+        initialized: true,
         isRequesting: false,
         data: action.payload,
       };
 
-    case USER_INFO_REQUESTING:
+    case PATIENTS_REQUESTING:
       return {
         ...state,
         isRequesting: true,
       };
 
-    case USER_INFO_FAILURE:
+    case PATIENTS_FAILURE:
       return {
         ...state,
         error: action.error,
@@ -36,7 +37,7 @@ const userReducer = (state: any = INITIAL_STATE, action: any) => {
         data: {},
       };
 
-    case CLEAR_USER_INFO:
+    case CLEAR_PATIENTS:
       return INITIAL_STATE;
 
     default:

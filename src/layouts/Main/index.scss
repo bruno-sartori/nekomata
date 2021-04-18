@@ -1,13 +1,24 @@
 @import '~styles/colors';
+@import '~styles/mixins';
+
 
 .main-layout {
   margin: 0;
   padding: 0;
+  display: grid;
+  grid-template-columns: 200px auto;
 
   &__content {
     width: 100%;
     height: 100vh;
     display: inline-block;
     background-color: $white;
+    padding: 20px;
+  }
+}
+
+@include mobile-portrait {
+  .main-layout {
+    grid-template-columns: auto;
   }
 }

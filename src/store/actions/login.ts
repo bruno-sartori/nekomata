@@ -29,7 +29,7 @@ export function clearLogin() {
 };
 
 export function loginAction(loginFormFields: ILoginFormFields, cookies: Cookies, callback: any) {
-  return async (dispatch: any, getState: () => any) => {
+  return async (dispatch: any) => {
     try {
       await dispatch(loginRequesting());
       const response = await signIn(loginFormFields);

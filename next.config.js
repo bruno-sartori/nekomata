@@ -33,27 +33,26 @@ module.exports = withPlugins([
   nextEnv(),
   withCSS(
     withSass({
-      //withImages({
-        webpack(config, { isServer }) {
-          // Returns environment variables as an object
-          const env = Object.keys(process.env).reduce((acc, curr) => {
-            acc[`process.env.${curr}`] = JSON.stringify(process.env[curr]);
-            return acc;
-          }, {});
-          // Allows you to create global constants which can be configured
-          // at compile time, which in our case is our environment variables
-          config.plugins.push(new webpack.DefinePlugin(env));
-          
-          config.module.rules.push({
-            test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-            loader: 'url-loader',
-            options: {
-              esModule: false
-            }
-          });
-          // specific alias for sass
-          config.resolve.alias['images'] = path.resolve(__dirname, './src/assets/images/');
-          config.resolve.alias['styles'] = path.resolve(__dirname, './src/styles/');
+      webpack(config, { isServer }) {
+        // Returns environment variables as an object
+        const env = Object.keys(process.env).reduce((acc, curr) => {
+          acc[`process.env.${curr}`] = JSON.stringify(process.env[curr]);
+          return acc;
+        }, {});
+        // Allows you to create global constants which can be configured
+        // at compile time, which in our case is our environment variables
+        config.plugins.push(new webpack.DefinePlugin(env));
+
+        config.module.rules.push({
+          test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
+          loader: 'url-loader',
+          options: {
+            esModule: false
+          }
+        });
+        // specific alias for sass
+        config.resolve.alias['images'] = path.resolve(__dirname, './src/assets/images/');
+        config.resolve.alias['styles'] = path.resolve(__dirname, './src/styles/');
 
         // Fixes npm packages that depend on `fs` module
         if (!isServer) {
@@ -63,9 +62,8 @@ module.exports = withPlugins([
         }
 
 
-          return config;
-        }
-      })
-    //)
+        return config;
+      }
+    })
   )
 ]);

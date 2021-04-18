@@ -1,6 +1,6 @@
 import React from 'react';
 
-declare interface IImage {
+interface IImage {
   src: string;
   width: number;
   height: number;
