@@ -10,11 +10,12 @@
   margin-top: 20px;
   outline: none;
 
-  &--disabled {
-    background-color: $gray;
-  }
-
   &:hover {
     cursor: pointer;
+  }
+
+  &:disabled {
+    background-color: $gray;
+    cursor: not-allowed;
   }
 }

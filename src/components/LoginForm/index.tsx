@@ -36,7 +36,7 @@ const LoginForm = (props: ILoginForm) => {
             type="password"
           />
 
-          <Button type="submit" title="Sign In" />
+          <Button type="submit">Sign In</Button>
 
         </form>
       </Card>
