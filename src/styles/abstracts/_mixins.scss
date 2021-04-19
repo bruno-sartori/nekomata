@@ -1,60 +1,10 @@
 @use 'sass:map';
-@use './breakpoints';
+@use './breakpoints' as *;
 
 @mixin breakpoint($key) {
   $size: map.get($breakpoints, $key);
 
-  @media (min-width: $size) {
+  @media (max-width: $size) {
     @content;
   }
 }
-
-// GRID MIXINS
-
-@mixin column($col-start, $col-end) {
-  grid-column: $col-start / span $col-end;
-
-  @include mobile-portrait() {
-    grid-column: 1 / span 4;
-  }
-}
-
-@mixin row($row-start, $row-end) {
-  grid-row: $row-start / span $row-end;
-}
-
-// END GRID MIXINS
-
-
-
-// OLD MEDIA MIXINS
-@mixin laptop {
-  @media (max-width: 1440px) {
-    @content;
-  }
-}
-
-@mixin tablet-portrait {
-  @media (max-width: 1024px) {
-    @content;
-  }
-}
-
-@mixin tablet-landscape {
-  @media (max-width: 1024px) and (orientation: landscape) {
-    @content;
-  }
-}
-
-@mixin mobile-landscape {
-  @media (max-width: 812px) and (orientation: landscape) {
-    @content;
-  }
-}
-
-@mixin mobile-portrait {
-  @media (max-width: 480px) {
-    @content;
-  }
-}
-// END OLD MEDIA MIXINS

@@ -58,7 +58,7 @@ const LoginContainer = (props: ILoginContainerProps) => {
 
   return (
     <section className="login-container">
-      <GridContainer rows={1} gridGap={0}>
+      <GridContainer rows={1}>
         <GridItem colSpan={6} className="login-container__left-section">
           <LoginBanner />
         </GridItem>

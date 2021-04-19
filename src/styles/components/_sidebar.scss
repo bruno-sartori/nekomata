@@ -24,10 +24,8 @@
     padding: 0;
     list-style: none;
   }
-}
 
-@include mobile-portrait {
-  .sidebar {
+  @include breakpoint(mobile) {
     width: 100%;
     height: 70px;
 

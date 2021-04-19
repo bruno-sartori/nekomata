@@ -1,15 +1,28 @@
 import React from 'react';
 
-interface IGridContainer {
+/**
+ * GridContainer properties
+ */
+interface IGridContainerProps {
+  /** Number of rows in grid container */
   rows?: number;
-  children: any;
+  /** Container`s children elements */
+  children: JSX.Element | JSX.Element[];
+  /** Space between columns */
   gridGap?: number;
+  /** Custom classname if needed */
   className?: string;
+  /** Custom inline style if needed */
   style?: React.CSSProperties;
 }
 
-const GridContainer = (props: IGridContainer) => {
-  const { rows = 1, children, gridGap = 30, className = '', style = {} } = props;
+/**
+ * GridContainer component
+ * 
+ * @example ./index.md
+ */
+const GridContainer: React.FC<IGridContainerProps> = (props) => {
+  const { rows = 1, children, gridGap = 0, className = '', style = {} } = props;
 
   return (
     <div

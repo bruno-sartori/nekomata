@@ -48,6 +48,10 @@
       }
     }
   }
+
+  @include breakpoint(mobile) {
+    display: inline;
+  }
 }
 
 .top-wave {
@@ -63,6 +67,10 @@
     height: 18px;
     background-color: $blue;
     border-bottom-right-radius: 25px;  
+  }
+
+  @include breakpoint(mobile) {
+    display: none;
   }
 }
 
@@ -82,19 +90,8 @@
     background-color: $blue;
     border-top-right-radius: 25px;  
   }
-}
 
-
-@include mobile-portrait {
-  .sidebar-item {
-    display: inline;
-  }
-
-  .top-wave {
-    display: none;
-  }
-
-  .bottom-wave {
+  @include breakpoint(mobile) {
     display: none;
   }
 }

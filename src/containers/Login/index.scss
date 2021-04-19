@@ -41,7 +41,7 @@
     }
   }
 
-  @include mobile-portrait {
+  @include breakpoint(mobile) {
     &__left-section {
       border-radius: 30px;
       border-bottom-left-radius: 0;

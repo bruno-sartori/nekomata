@@ -3,11 +3,46 @@ const path = require('path');
 
 module.exports = {
   require: [path.join(__dirname, './src/styles/style.scss')],
-  components: "src/components/**/*.tsx",
+  // components: "src/components/**/*.tsx",
   propsParser: require("react-docgen-typescript").withCustomConfig(
     './tsconfig.json'
   ).parse,
   ignore: ['**/*.d.ts', '**/*.ts'],
+  pagePerSection: true,
+  sections: [
+    {
+      name: 'Introduction',
+      content: 'docs/introduction.md'
+    },
+    {
+      name: 'Documentation',
+      sections: [
+        {
+          name: 'Installation',
+          content: 'docs/installation.md',
+          description: 'The description for the installation section'
+        },
+        {
+          name: 'Configuration',
+          content: 'docs/configuration.md'
+        },
+        {
+          name: 'Live Demo',
+          external: true,
+          href: 'http://example.com'
+        }
+      ],
+      sectionDepth: 1
+    },
+    {
+      name: 'UI Components',
+      content: 'docs/ui.md',
+      components: 'src/components/**/*.tsx',
+      // Will show "Components" as single page, filtering its children
+      sectionDepth: 1
+    },
+  ],
+  usageMode: 'expand',
   webpackConfig: {
     plugins: [new MiniCssExtractPlugin()],
     resolve: {

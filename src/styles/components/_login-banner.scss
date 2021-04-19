@@ -16,7 +16,7 @@
   }
 
 
-  @include mobile-portrait {
+  @include breakpoint(mobile) {
     display: flex;
     flex-wrap: wrap;
     align-items: center;

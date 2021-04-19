@@ -3,7 +3,7 @@
 .grid-container {
   display: grid;
   grid-template-columns: repeat($grid-columns, 1fr);
-  padding: $grid-padding;
+  padding: $grid-padding; // TODO: remove padding?
 
   @for $i from 1 through $grid-rows {
     &--rows--#{$i} {
@@ -11,7 +11,7 @@
     }
   }
 
-  @include mobile-portrait {
+  @include breakpoint(mobile) {
     grid-template-columns: repeat($grid-responsive-columns, 1fr);
   }
 }

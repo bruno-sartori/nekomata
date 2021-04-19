@@ -7,7 +7,7 @@
   background-size: 100%;
   background-repeat: no-repeat;
 
-  @include mobile-portrait {
+  @include breakpoint(mobile) {
     background-size: auto;
   }
 }

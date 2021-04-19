@@ -11,7 +11,7 @@
     }
   }
 
-  @include mobile-portrait {
+  @include breakpoint(mobile) {
     grid-column: span 12;
   }
 }

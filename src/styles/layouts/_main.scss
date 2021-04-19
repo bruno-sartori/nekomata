@@ -13,10 +13,9 @@
     background-color: $white;
     padding: 20px;
   }
-}
 
-@include mobile-portrait {
-  .main-layout {
+  @include breakpoint(mobile) {
     grid-template-columns: auto;
   }
 }
+
