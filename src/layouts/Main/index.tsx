@@ -4,9 +4,6 @@ import { faHome, faHospitalUser, faLock } from '@fortawesome/free-solid-svg-icon
 // Components
 import Sidebar from '@components/Sidebar';
 
-// Styles
-import './index.scss';
-
 const menuItems = [
   {
     title: 'Home',

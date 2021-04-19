@@ -3,9 +3,6 @@ import { Field } from 'redux-form';
 
 // Components
 import Card from '@components/Card';
-
-// Styles
-import './index.scss';
 import TextField from '@components/TextField';
 import Button from '@components/Button';
 

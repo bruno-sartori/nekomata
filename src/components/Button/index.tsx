@@ -1,7 +1,5 @@
 import React, { CSSProperties } from 'react';
 
-import './index.scss';
-
 /**
  * Button properties
  */
@@ -25,7 +23,7 @@ interface IButtonProps {
  * 
  * @example ./index.md
  */
-const Button = (props: IButtonProps) => {
+const Button: React.FC<IButtonProps> = (props) => {
   const { type, className, onClick, children, style, disabled = false } = props;
 
   return (

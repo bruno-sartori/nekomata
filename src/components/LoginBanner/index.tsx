@@ -1,11 +1,13 @@
 import React from 'react';
+
+// Components
+import Image from '@components/Image';
+
+// Images
 import LoginBannerLogo from '@images/psychologist.png';
 import NekomataLogo from '@images/nekomata.png';
 
-import './index.scss';
-import Image from '@components/Image';
-
-const LoginBanner = () => {
+const LoginBanner: React.FC = () => {
   return (
     <div className="login-banner">
       <h1 className="login-banner__title">

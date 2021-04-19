@@ -2,6 +2,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 
 module.exports = {
+  require: [path.join(__dirname, './src/styles/style.scss')],
   components: "src/components/**/*.tsx",
   propsParser: require("react-docgen-typescript").withCustomConfig(
     './tsconfig.json'

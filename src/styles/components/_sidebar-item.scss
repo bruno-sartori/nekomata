@@ -1,5 +1,4 @@
-@import '~styles/colors';
-@import '~styles/mixins';
+@use '../abstracts' as *;
 
 .sidebar-item {
   margin-top: 20px;

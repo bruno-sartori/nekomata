@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 // Store
 import initializeStore from '@store/store';
 
-import '../styles/globals.scss';
+import '../styles/style.scss';
 
 function NekomataApp({ Component, pageProps, store }) {
   return (

@@ -1,5 +1,4 @@
-@import '~styles/colors';
-@import '~styles/mixins';
+@use '~styles/abstracts' as *;
 
 .login-banner {
   padding: 20px 30px;

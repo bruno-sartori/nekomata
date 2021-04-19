@@ -1,9 +1,9 @@
-@import '~styles/mixins';
+@use '../abstracts' as *;
 
 .login-layout {
   display: flex;
   height: 100vh;
-  background-image: url('../../assets/images/blue-blur-background.jpg');
+  background-image: url('../assets/images/blue-blur-background.jpg'); // TODO needed to be root styles relative path!
   background-size: 100%;
   background-repeat: no-repeat;
 

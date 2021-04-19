@@ -1,6 +1,4 @@
 import React from 'react';
-import { WithRouterProps } from 'next/dist/client/with-router';
-import { withRouter } from 'next/router';
 
 // Components
 import SidebarItem, { ISidebarItemProps } from '@components/SidebarItem';
@@ -8,10 +6,7 @@ import SidebarItem, { ISidebarItemProps } from '@components/SidebarItem';
 // Images
 import Logo from '@images/logo.png';
 
-// Styles
-import './index.scss';
-
-interface ISidebarProps extends WithRouterProps {
+interface ISidebarProps {
   menuItems: Array<ISidebarItemProps>;
 }
 
@@ -32,4 +27,4 @@ const Sidebar = (props: ISidebarProps) => {
   );
 };
 
-export default withRouter(Sidebar);
+export default Sidebar;

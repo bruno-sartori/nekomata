@@ -1,6 +1,4 @@
-@import '~styles/colors';
-@import '~styles/mixins';
-
+@use '~styles/abstracts' as *;
 
 .main-layout {
   margin: 0;

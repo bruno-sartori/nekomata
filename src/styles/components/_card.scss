@@ -1,4 +1,4 @@
-@import '~styles/colors';
+@use '../abstracts' as *;
 
 .card {
   background-color: $white;

@@ -1,7 +1,5 @@
 import React from 'react';
 
-import './index.scss';
-
 interface IGridItem {
   children: any;
   colSpan: number;

@@ -1,5 +1,4 @@
 import React from 'react';
-import './index.scss';
 
 const LoginLayout = (props: any) => {
   return (

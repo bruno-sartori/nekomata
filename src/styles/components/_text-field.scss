@@ -1,5 +1,4 @@
-@import '~styles/colors';
-@import '~styles/variables';
+@use '~styles/abstracts' as *;
 
 .text-field {
   margin-top: 15px;
