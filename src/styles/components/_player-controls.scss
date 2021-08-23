@@ -1,0 +1,62 @@
+@use '../abstracts' as *;
+
+.timeline {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.9vh;
+  flex-direction: column;
+  min-width: 40%;
+
+  &-control {
+    width: 100%;
+
+    &--disabled {
+      visibility: hidden;
+    }
+  }
+  
+  &-timers {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    color: #999999;
+    font-size: 12px;
+
+    &__placeholder {
+      min-height: 30px;
+    }
+  }
+
+  &__time {
+    &-current,
+    &-total {
+      font-size: 1.65rem;
+    }
+  }
+}
+
+.controls {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  position: relative;
+
+  &__forward,
+  &__backward {
+    cursor: pointer;
+  }
+
+  &__prev {
+    position: absolute;
+    left: 0px;
+    top: 13px;
+    cursor: pointer;
+  }
+
+  &__next {
+    position: absolute;
+    right: 0;
+    top: 13px;
+    cursor: pointer;
+  }
+}

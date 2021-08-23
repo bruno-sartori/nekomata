@@ -1,0 +1,22 @@
+@use '../abstracts' as *;
+
+.chromecast-launcher {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  margin: auto 16px auto 0;
+  cursor: pointer;
+
+  google-cast-launcher {
+    --connected-color: var(--text-highlight);
+  }
+
+  @include breakpoint(tablet) {
+    width: 24px;
+    height: 25px;
+    margin-left: 16px;
+    margin-right: 0;
+  }
+}
+
+

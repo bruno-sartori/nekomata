@@ -1,0 +1,146 @@
+@use '../abstracts' as *;
+
+.cast-player {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 400px;
+  height: 289px;
+  margin-right: 23px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background-color: #000;
+  position: fixed;
+  bottom: -100vh;
+  right: 0;
+  box-sizing: border-box;
+  z-index: 999;
+  transition: 0.7s;
+
+  &:hover {
+    .cast-player__placeholder {
+      transition: opacity 0.5s ease;
+      opacity: 0;
+    }
+    .cast-player__container {
+      transition: opacity 0.5s ease;
+      opacity: 1;
+    }
+  }
+
+  &--visible {
+    bottom: 0;
+    transition: 0.7s;
+  }
+
+  &__background {
+    width: 100%;
+    position: absolute;
+
+    &__image {
+      width: 100%;
+      opacity: 0.2;
+      
+      @include breakpoint(tablet) {
+        height: 175px;
+      }
+    }
+  }
+
+  &__placeholder {
+    position: absolute;
+    width: 100%;
+    top: 102px;
+    text-align: center;
+    color: var(--text-primary);
+    transition: opacity 0.5s ease;
+    opacity: 1;
+
+    @extend .paragraph;
+
+    @include breakpoint(tablet) {
+      opacity: 0;
+    }
+  }
+
+  &__container {
+    display: block;
+    width: calc(400px - 30px); // padding calc
+    padding: 15px;
+    height: calc(225px - 30px); // padding calc
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    justify-content: space-between;
+    z-index: 9;
+    
+    &-top {
+      display: block;
+    }
+
+    &-close-icon {
+      display: block;
+      float: right;
+      cursor: pointer;
+    }
+
+    &-controls {
+      display: block;
+      width: 100%;
+    }
+
+    @include breakpoint(tablet) {
+      opacity: 1;
+      display: block;
+      margin: 0;
+
+      &-left {
+        &-poster {
+          display: none;
+        }
+
+        &-info {
+          &-icons {
+            display: flex;
+            position: absolute;
+            bottom: 8px;
+            left: 0px;
+          }
+        }
+      }
+
+      &-right {
+        float: right;
+      }
+
+      &-close-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+      }
+    }
+  }
+
+  &__title-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 64px;
+    background-color: var(--card-background);
+    padding-left: 24px;
+    padding-right: 24px;
+
+    h5 {
+      color: var(--text-primary);
+
+      @extend .heading-5;
+      @include ellipsis;
+    }
+  }
+
+  @include breakpoint(tablet) {
+    display: none;
+    padding: 0 15px;
+    height: 175px;
+    margin-bottom: 65px;
+  }
+}

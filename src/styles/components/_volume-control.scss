@@ -1,0 +1,27 @@
+@use '../abstracts' as *;
+
+.volume-control {
+  display: flex;
+  max-width: 120px;
+  align-items: center;
+  justify-content: center;
+  padding: 21px 0;
+
+  &__icon {
+    margin-right: 12px;
+    width: 24px;
+    margin-top: -8px;
+    cursor: pointer;
+
+    &--mute {
+      margin-right: 12px;
+      width: 17px;
+      margin-top: -8px;
+      cursor: pointer;
+    }
+  }
+
+  @include breakpoint(tablet) {
+    padding: 10px 0;
+  }
+}
