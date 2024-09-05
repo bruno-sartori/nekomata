@@ -1,0 +1,1 @@
+{"version":3,"file":"playback-snapshots.d.ts","sourceRoot":"","sources":["../../../src/components/playback/playback-snapshots.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAQ,MAAM,KAAK,CAAC;AAIvC,qBACa,iBAAkB,SAAQ,UAAU;IAC/C,OAAgB,MAAM,0BAA0B;;IAMvC,MAAM;CAKhB;AAED,OAAO,CAAC,MAAM,CAAC;IACb,UAAU,qBAAqB;QAC7B,oBAAoB,EAAE,iBAAiB,CAAC;KACzC;CACF"}

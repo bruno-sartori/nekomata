@@ -1,0 +1,1 @@
+{"version":3,"file":"icon-redo-arrow.d.ts","sourceRoot":"","sources":["../../src/icons/icon-redo-arrow.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,UAAU,EAAQ,MAAM,KAAK,CAAC;AAGvC,qBACa,aAAc,SAAQ,UAAU;IAElC,MAAM;CA8BhB;AAED,OAAO,CAAC,MAAM,CAAC;IACb,UAAU,qBAAqB;QAC7B,iBAAiB,EAAE,aAAa,CAAC;KAClC;CACF"}
