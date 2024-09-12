@@ -1,95 +1,84 @@
 import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { CurrentlyGrabbed, RangeTimings } from '../../types';
-import VideoLoadedEvent from '../../events/video-loaded';
-import AddGrabbersEvent from '../../events/add-grabbers';
+// Events
 import UpdateCurrentlyGrabbedEvent from '../../events/update-currently-grabbed';
 import UpdateTimingsEvent from '../../events/update-timings';
 import UpdateProgressEvent from '../../events/update-progress';
 import VideoSeekEvent from '../../events/video-seek';
 import VideoPauseEvent from '../../events/video-pause';
-import SeekableResizedEvent from '../../events/seekable-resized';
 import UpdateSeekableStyleEvent from '../../events/update-seekable-style';
+import { playbackGrabbersStyle } from '../../styles/playback-grabbers';
+import '../../icons/icon-grabber';
 
 @customElement('playback-grabbers')
 export class PlaybackGrabbers extends LitElement {
+  static override styles = playbackGrabbersStyle;
 
-  @property({ type: Array })
+  @state()
   timings: Array<RangeTimings> = [];
 
-  @property({ type: Object })
+  @state()
   currentlyGrabbed?: CurrentlyGrabbed = { index: 0, type: 'none' };
 
-  private videoDuration = 0;
+  @state()
+  videoDuration = 0;
 
-  private shouldShowGrabbers = false;
+  @state()
+  shouldShowGrabbers = false;
 
-  private seekableRect?: DOMRect;
-
-  constructor() {
-    super();
-
-    this.addEventListener(VideoLoadedEvent.eventName, ((e: VideoLoadedEvent) => {
-      this.videoDuration = e.detail.duration;
-    }) as EventListener);
-
-    this.addEventListener(AddGrabbersEvent.eventName, (() => {
-      this.shouldShowGrabbers = true;
-    }) as EventListener);
-
-    this.addEventListener(SeekableResizedEvent.eventName, ((e: SeekableResizedEvent) => {
-      this.seekableRect = e.detail.rect
-    }) as EventListener);
-  }
+  @state()
+  seekableRect?: DOMRect;
 
   override render() {
     return html`
       <div id="grabbers">
         ${(this.shouldShowGrabbers && this.timings.length > 0) && this.timings.map((timing, i) => html`
           <div id='grabberStart${i}' class='grabber' style="left: ${timing.start / this.videoDuration * 100}%"
-            onMouseDown="handleGrabberMouseDown(event, ${i}, 'start')"
-            onPointerDown="handleGrabberPointerDown(event, ${i}, 'start')"
+            @mousedown="${this.handleGrabberMouseDown(i, 'start')}"
+            @pointerdown="${this.handleGrabberPointerDown(i, 'start')}"
           >
-            <svg version='1.1' xmlns='http://www.w3.org/2000/svg' x='0' y='0' width='10' height='14' viewBox='0 0 10 14' xmlSpace='preserve'>
-              <path class='st0' d='M1 14L1 14c-0.6 0-1-0.4-1-1V1c0-0.6 0.4-1 1-1h0c0.6 0 1 0.4 1 1v12C2 13.6 1.6 14 1 14zM5 14L5 14c-0.6 0-1-0.4-1-1V1c0-0.6 0.4-1 1-1h0c0.6 0 1 0.4 1 1v12C6 13.6 5.6 14 5 14zM9 14L9 14c-0.6 0-1-0.4-1-1V1c0-0.6 0.4-1 1-1h0c0.6 0 1 0.4 1 1v12C10 13.6 9.6 14 9 14z'/>
-            </svg>
+            <icon-grabber></icon-grabber>
           </div>
           <div id='grabberEnd${i}' class='grabber' style="left: ${timing.end / this.videoDuration * 100}%"
-            onMouseDown="${this.handleGrabberMouseDown(i, 'end')}"
-            onPointerDown="${this.handleGrabberPointerDown(i, 'end')}"
+            @mousedown="${this.handleGrabberMouseDown(i, 'end')}"
+            @pointerdown="${this.handleGrabberPointerDown(i, 'end')}"
           >
-            <svg version='1.1' xmlns='http://www.w3.org/2000/svg' x='0' y='0' width='10' height='14' viewBox='0 0 10 14' xmlSpace='preserve'>
-              <path class='st0' d='M1 14L1 14c-0.6 0-1-0.4-1-1V1c0-0.6 0.4-1 1-1h0c0.6 0 1 0.4 1 1v12C2 13.6 1.6 14 1 14zM5 14L5 14c-0.6 0-1-0.4-1-1V1c0-0.6 0.4-1 1-1h0c0.6 0 1 0.4 1 1v12C6 13.6 5.6 14 5 14zM9 14L9 14c-0.6 0-1-0.4-1-1V1c0-0.6 0.4-1 1-1h0c0.6 0 1 0.4 1 1v12C10 13.6 9.6 14 9 14z'/>
-            </svg>
+            <icon-grabber></icon-grabber>
           </div>
         `)}
       </div>
     `;
   }
 
-  private addActiveSegments() {
-    let colors = ''
-    let counter = 0;
-    
-    colors += `, rgba(240, 240, 240, 0) 0%, rgba(240, 240, 240, 0) ${this.timings[0].start / this.videoDuration * 100}%`
-    for (let times of this.timings) {
-      if (counter > 0) {
-        colors += `, rgba(240, 240, 240, 0) ${this.timings[counter].end / this.videoDuration * 100}%, rgba(240, 240, 240, 0) ${times.start / this.videoDuration * 100}%`
-      }
-      colors += `, #655dc2 ${times.start / this.videoDuration * 100}%, #655dc2 ${times.end / this.videoDuration * 100}%`
-      counter += 1
-    }
-    colors += `, rgba(240, 240, 240, 0) ${this.timings[counter - 1].end / this.videoDuration * 100}%, rgba(240, 240, 240, 0) 100%`
-    
-    this.dispatchEvent(new UpdateSeekableStyleEvent({ bubbles: true, composed: true, detail: { style: { backgroundImage: `linear-gradient(to right${colors})` }}}));
-  }
-
-  private handleMouseMoveWhenGrabbed(event: MouseEvent) {
+  private handleMouseMoveWhenGrabbed = (event: MouseEvent) => {
     const difference = 0.2;
+
+    const addActiveSegments = () => {
+      let colors = ''
+      let counter = 0;
+
+      console.log('addActiveSegments', this.timings);
+
+      if (this.timings.length > 0) {
+        colors += `, rgba(240, 240, 240, 0) 0%, rgba(240, 240, 240, 0) ${this.timings?.[0].start / this.videoDuration * 100}%`
+        for (let times of this.timings) {
+          if (counter > 0) {
+            colors += `, rgba(240, 240, 240, 0) ${this.timings[counter].end / this.videoDuration * 100}%, rgba(240, 240, 240, 0) ${times.start / this.videoDuration * 100}%`
+          }
+          colors += `, #655dc2 ${times.start / this.videoDuration * 100}%, #655dc2 ${times.end / this.videoDuration * 100}%`
+          counter += 1
+        }
+        colors += `, rgba(240, 240, 240, 0) ${this.timings?.[counter - 1]?.end / this.videoDuration * 100}%, rgba(240, 240, 240, 0) 100%`
+        
+        this.dispatchEvent(new UpdateSeekableStyleEvent({ bubbles: true, composed: true, detail: { style: { backgroundImage: `linear-gradient(to right${colors})` }}}));
+      }
+      
+    }
     
     this.dispatchEvent(new VideoPauseEvent({ bubbles: true, composed: true }));
 
-    this.addActiveSegments();
+    addActiveSegments();
 
     let seekRatio = (event.clientX - this.seekableRect!.left) / this.seekableRect!.width;
     const index = this.currentlyGrabbed!.index
@@ -108,6 +97,8 @@ export class PlaybackGrabbers extends LitElement {
         grabberStart.style.left = `${seekRatio * 100}%`;
       }
     } else if ((type === 'end')  && (seek > time[index].start + difference) && (seek < (index !== (this.timings.length - 1) ? time[index].start - difference - 0.2 : this.videoDuration))) {
+      this.dispatchEvent(new VideoSeekEvent({ bubbles: true, composed: true, detail: { seekTime: seek } }));
+
       time[index]['end'] = seek;
       this.dispatchEvent(new UpdateTimingsEvent({ bubbles: true, composed: true, detail: { timings: time } }));
       
@@ -122,11 +113,11 @@ export class PlaybackGrabbers extends LitElement {
     this.dispatchEvent(new UpdateProgressEvent({ bubbles: true, composed: true, detail: { left: progressLeft, width: progressWidth }}));
   }
 
-  private removePointerMoveEventListener() {
+  private removePointerMoveEventListener = () => {
     window.removeEventListener('pointermove', this.handleMouseMoveWhenGrabbed)
   }
   
-  private removeMouseMoveEventListener() {
+  private removeMouseMoveEventListener = () => {
     window.removeEventListener('mousemove', this.handleMouseMoveWhenGrabbed)
   }
 

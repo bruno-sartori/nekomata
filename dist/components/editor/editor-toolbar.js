@@ -5,13 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { editorToolbarStyle } from '../../styles/editor-toolbar.style';
 import ChapterAddedEvent from '../../events/chapter-added';
-import FilesAddedEvent from '../../events/files-added';
-import VideoLoadedEvent from '../../events/video-loaded';
-import './editor-sidebar';
-import './editor-timeline';
 import '../../icons/icon-plus';
 import '../../icons/icon-redo-arrow';
 import '../../icons/icon-save';
@@ -19,16 +15,14 @@ import '../../icons/icon-trash';
 import '../../icons/icon-undo-arrow';
 let EditorToolbar = class EditorToolbar extends LitElement {
     constructor() {
-        super();
+        super(...arguments);
         this.timings = [];
         this.ranges = [];
-        this.videoDuration = 0;
-        this.addEventListener(FilesAddedEvent.eventName, ((e) => {
-            this.selectedFile = e.detail.files;
-        }));
-        this.addEventListener(VideoLoadedEvent.eventName, ((e) => {
-            this.videoDuration = e.detail.duration;
-        }));
+    }
+    updated(changedProperties) {
+        if (changedProperties.has("files") && (this.files?.length ?? 0) > 0) {
+            this.selectedFile = this.files[0];
+        }
     }
     render() {
         return html `
@@ -55,19 +49,20 @@ let EditorToolbar = class EditorToolbar extends LitElement {
             <icon-trash></icon-trash>
           </button>
         </div>
-        <editor-timeline .timings=${this.timings} .currentlyGrabbed=${this.currentlyGrabbed}></editor-timeline>
       </div>
     `;
     }
     saveRange() {
         const title = 'chapters';
         const times = this.timings[0];
-        this.ranges.push({ title, range: { ...times } });
-        const sizeRange = [
-            times.start / this.videoDuration * 100,
-            times.end / this.videoDuration * 100
-        ];
-        this.dispatchEvent(new ChapterAddedEvent({ bubbles: true, composed: true, detail: { title, sizeRange } }));
+        const chapterRange = {
+            title,
+            range: {
+                ...times
+            }
+        };
+        this.ranges.push(chapterRange);
+        this.dispatchEvent(new ChapterAddedEvent({ bubbles: true, composed: true, detail: chapterRange }));
     }
     exportJson() {
         const json = {
@@ -84,11 +79,11 @@ let EditorToolbar = class EditorToolbar extends LitElement {
 };
 EditorToolbar.styles = editorToolbarStyle;
 __decorate([
-    property({ type: Array })
+    state()
 ], EditorToolbar.prototype, "timings", void 0);
 __decorate([
-    property({ type: Object })
-], EditorToolbar.prototype, "currentlyGrabbed", void 0);
+    state()
+], EditorToolbar.prototype, "files", void 0);
 EditorToolbar = __decorate([
     customElement('editor-toolbar')
 ], EditorToolbar);

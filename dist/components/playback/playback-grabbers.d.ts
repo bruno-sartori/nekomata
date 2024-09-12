@@ -1,14 +1,14 @@
 import { LitElement } from 'lit';
 import { CurrentlyGrabbed, RangeTimings } from '../../types';
+import '../../icons/icon-grabber';
 export declare class PlaybackGrabbers extends LitElement {
+    static styles: import("lit").CSSResult;
     timings: Array<RangeTimings>;
     currentlyGrabbed?: CurrentlyGrabbed;
-    private videoDuration;
-    private shouldShowGrabbers;
-    private seekableRect?;
-    constructor();
+    videoDuration: number;
+    shouldShowGrabbers: boolean;
+    seekableRect?: DOMRect;
     render(): import("lit-html").TemplateResult<1>;
-    private addActiveSegments;
     private handleMouseMoveWhenGrabbed;
     private removePointerMoveEventListener;
     private removeMouseMoveEventListener;

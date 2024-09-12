@@ -1,9 +1,3 @@
-export const logger = {
-    info: (label, message) => console.log(`%c ${label} %c ${message}`, `background-color: blue; color: #FFFFFF`, `background-color: inherit; color: inherit`),
-    success: (label, message) => console.log(`%c ${label} %c ${message}`, `background-color: green; color: #FFFFFF`, `background-color: inherit; color: inherit`),
-    warn: (label, message) => console.warn(`%c ${label} %c ${message}`, `background-color: orange; color: #FFFFFF`, `background-color: inherit; color: inherit`),
-    error: (label, message) => console.error(`%c ${label} %c ${message}`, `background-color: red; color: #FFFFFF`, `background-color: inherit; color: inherit`)
-};
 export const secondsToHours = (seconds) => seconds / 3600;
 export const secondsToMinutes = (seconds) => seconds / 60;
 export const isFloat = (n) => {

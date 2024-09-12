@@ -5,30 +5,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { playbackProgressStyle } from '../../styles/playback-progress.style';
-import UpdateProgressEvent from '../../events/update-progress';
 let PlaybackProgress = class PlaybackProgress extends LitElement {
     constructor() {
-        super();
-        this.width = '0%';
-        this.left = '0%';
-        this.addEventListener(UpdateProgressEvent.eventName, ((e) => {
-            if (e.detail.width) {
-                this.width = e.detail.width;
-            }
-            if (e.detail.left) {
-                this.left = e.detail.left;
-            }
-        }));
+        super(...arguments);
+        this.progress = {};
     }
     render() {
         return html `
-      <div class="playback__progress" id="progress" style="width: ${this.width}; left: ${this.left};"></div>
+      <div class="playback__progress" id="progress" style="width: ${this.progress.width}; left: ${this.progress.left};"></div>
     `;
     }
 };
 PlaybackProgress.styles = playbackProgressStyle;
+__decorate([
+    state()
+], PlaybackProgress.prototype, "progress", void 0);
 PlaybackProgress = __decorate([
     customElement('playback-progress')
 ], PlaybackProgress);

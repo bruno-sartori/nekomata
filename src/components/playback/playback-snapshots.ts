@@ -1,18 +1,26 @@
 import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { playbackSnapshotsStyle } from '../../styles/playback-snapshots.style';
 
 @customElement('playback-snapshots')
 export class PlaybackSnapshots extends LitElement {
   static override styles = playbackSnapshotsStyle;
+  
+  @state()
+  snapshots: Array<HTMLCanvasElement> = [];
 
-  constructor() {
-    super();
+  override updated(changedProperties: Map<string, unknown>) {
+    console.log(changedProperties)
+    /*
+    if (changedProperties.has("snapshots")) {
+    }*/
   }
 
   override render() {
     return html`
-      <div id="snapshots" class="playback__snapshots"></div>
+      <div id="snapshots" class="playback__snapshots">
+        ${this.snapshots.map(snapshot => snapshot)}
+      </div>
     `;
   }
 }

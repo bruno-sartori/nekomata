@@ -1,14 +1,11 @@
-interface ChapterAddedEventDetail {
-    title: string;
-    sizeRange: Array<number>;
-}
-interface ChapterAddedEventInit extends CustomEventInit<ChapterAddedEventDetail> {
+import { ChapterRange } from "../types";
+interface ChapterAddedEventInit extends CustomEventInit<ChapterRange> {
     bubbles?: boolean;
     cancelable?: boolean;
     composed?: boolean;
-    detail: ChapterAddedEventDetail;
+    detail: ChapterRange;
 }
-declare class ChapterAddedEvent extends CustomEvent<ChapterAddedEventDetail> {
+declare class ChapterAddedEvent extends CustomEvent<ChapterRange> {
     protected init: ChapterAddedEventInit;
     static eventName: string;
     constructor(init: ChapterAddedEventInit);

@@ -1,26 +1,3 @@
-export const logger = {
-  info: (label: string, message: string) => console.log(
-    `%c ${label} %c ${message}`,
-    `background-color: blue; color: #FFFFFF`,
-    `background-color: inherit; color: inherit`
-  ),
-  success: (label: string, message: string) => console.log(
-    `%c ${label} %c ${message}`,
-    `background-color: green; color: #FFFFFF`,
-    `background-color: inherit; color: inherit`
-  ),
-  warn: (label: string, message: string) => console.warn(
-    `%c ${label} %c ${message}`,
-    `background-color: orange; color: #FFFFFF`,
-    `background-color: inherit; color: inherit`
-  ),
-  error: (label: string, message: string) => console.error(
-    `%c ${label} %c ${message}`,
-    `background-color: red; color: #FFFFFF`,
-    `background-color: inherit; color: inherit`
-  )
-};
-
 export const secondsToHours = (seconds: number) => seconds / 3600;
 export const secondsToMinutes = (seconds: number) => seconds / 60;
 

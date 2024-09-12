@@ -1,7 +1,7 @@
 {
   "name": "@bsartori/nekomata",
   "private": true,
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "A web component based video editor that can be used by any framework",
   "author": "Bruno Sartori <",
   "license": "MIT",

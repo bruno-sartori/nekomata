@@ -1,53 +1,51 @@
 import { LitElement, html } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 import { playbackSeekableStyle } from '../../styles/playback-seekable.style';
-import { RangeTimings } from '../../types';
-import VideoLoadedEvent from '../../events/video-loaded';
+import { RangeTimings, SeekableStyle } from '../../types';
 import VideoPauseEvent from '../../events/video-pause';
 import VideoSeekEvent from '../../events/video-seek';
 import UpdateProgressEvent from '../../events/update-progress';
 import UpdateCurrentlyGrabbedEvent from '../../events/update-currently-grabbed';
 import SeekableResizedEvent from '../../events/seekable-resized';
-import UpdateSeekableStyleEvent from '../../events/update-seekable-style';
 
 @customElement('playback-seekable')
 export class PlaybackSeekable extends LitElement {
   static override styles = playbackSeekableStyle;
 
-  private videoDuration: number;
-
-  private backgroundImage = '';
-
-  @property({ type: Array })
+  @state()
   timings: Array<RangeTimings> = [];
 
+  @state()
+  videoDuration = 0;
+  
   @query('#seekable')
   seekable?: HTMLDivElement;
+
+  @state()
+  seekableStyle: SeekableStyle = {
+    backgroundImage: ''
+  };
 
   constructor() {
     super();
 
     this.videoDuration = 0;
 
-    this.addEventListener(VideoLoadedEvent.eventName, ((e: VideoLoadedEvent) => {
-      this.videoDuration = e.detail.duration;
-    }) as EventListener);
-
-    this.addEventListener(UpdateSeekableStyleEvent.eventName, ((e: UpdateSeekableStyleEvent) => {
-      this.backgroundImage = e.detail.style.backgroundImage;
-    }) as EventListener);
-
     document.addEventListener('DOMContentLoaded', () => {
       new ResizeObserver(() => {
         this.dispatchEvent(new SeekableResizedEvent({ bubbles: true, composed: true, detail: { rect: this.seekable!.getBoundingClientRect() }}))
       }).observe(this.seekable!);
-    })
-
+    });
   }
 
   override render() {
     return html`
-      <div @click="${this.updateProgress}" class="seekable" id="seekable" style="background-image: ${this.backgroundImage};"></div>
+      <div 
+        @click="${this.updateProgress}" 
+        class="seekable" 
+        id="seekable" 
+        style="background-image: ${this.seekableStyle.backgroundImage};"
+      ></div>
     `;
   }
 

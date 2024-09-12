@@ -5,22 +5,36 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { editorTimelineStyle } from '../../styles/editor-timeline.style';
 import './editor-playback';
 import '../timeline/timeline-chapters';
-import FillTimelineEvent from '../../events/fill-timeline';
 import { getTimeString, isFloat } from '../../utils/time';
 let EditorTimeline = class EditorTimeline extends LitElement {
     constructor() {
-        super();
+        super(...arguments);
         this.timings = [];
+        this.fillTimeline = {
+            duration: 0,
+            metric: 'hours',
+            fill: false,
+        };
+        this.videoDuration = 0;
+        this.shouldShowGrabbers = false;
+        this.seekableStyle = {
+            backgroundImage: ''
+        };
+        this.progress = {};
+        this.snapshots = [];
+        this.chapters = [];
         this.timelineInfo = [];
-        this.addEventListener(FillTimelineEvent.eventName, ((e) => {
-            const duration = e.detail.duration;
-            const metric = e.detail.metric;
-            this.fillTimeline(duration, metric);
-        }));
+    }
+    updated(changedProperties) {
+        if (changedProperties.has("timeline")) {
+            if (this.fillTimeline.fill) {
+                this.handleFillTimeline(this.fillTimeline.duration, this.fillTimeline.metric);
+            }
+        }
     }
     render() {
         return html `
@@ -30,14 +44,26 @@ let EditorTimeline = class EditorTimeline extends LitElement {
             <div class="timeline__info" id="timelineInfo">
               ${this.timelineInfo}
             </div>
-            <timeline-chapters></timeline-chapters>
-            <editor-playback .timings=${this.timings} .currentlyGrabbed=${this.currentlyGrabbed}></editor-playback>
+            <timeline-chapters 
+              .chapters=${this.chapters}
+              .videoDuration=${this.videoDuration}
+            ></timeline-chapters>
+            <editor-playback 
+              .shouldShowGrabbers=${this.shouldShowGrabbers} 
+              .videoDuration=${this.videoDuration} 
+              .timings=${this.timings} 
+              .currentlyGrabbed=${this.currentlyGrabbed}
+              .seekableRect=${this.seekableRect}
+              .seekableStyle=${this.seekableStyle}
+              .progress=${this.progress}
+              .snapshots=${this.snapshots}
+              ></editor-playback>
           </div>
         </div>
       </div>
     `;
     }
-    fillTimeline(duration, metric) {
+    handleFillTimeline(duration, metric) {
         for (let i = 0; i <= duration + 0.5; i = i + 0.5) {
             this.timelineInfo.push(html `
         <div class="timeline__time ${isFloat(i) ? 'timeline__time--half' : ''}">${getTimeString(i, metric)}</div>
@@ -47,11 +73,35 @@ let EditorTimeline = class EditorTimeline extends LitElement {
 };
 EditorTimeline.styles = editorTimelineStyle;
 __decorate([
-    property({ type: Array })
+    state()
 ], EditorTimeline.prototype, "timings", void 0);
 __decorate([
-    property({ type: Object })
+    state()
 ], EditorTimeline.prototype, "currentlyGrabbed", void 0);
+__decorate([
+    state()
+], EditorTimeline.prototype, "fillTimeline", void 0);
+__decorate([
+    state()
+], EditorTimeline.prototype, "videoDuration", void 0);
+__decorate([
+    state()
+], EditorTimeline.prototype, "shouldShowGrabbers", void 0);
+__decorate([
+    state()
+], EditorTimeline.prototype, "seekableRect", void 0);
+__decorate([
+    state()
+], EditorTimeline.prototype, "seekableStyle", void 0);
+__decorate([
+    state()
+], EditorTimeline.prototype, "progress", void 0);
+__decorate([
+    state()
+], EditorTimeline.prototype, "snapshots", void 0);
+__decorate([
+    state()
+], EditorTimeline.prototype, "chapters", void 0);
 EditorTimeline = __decorate([
     customElement('editor-timeline')
 ], EditorTimeline);

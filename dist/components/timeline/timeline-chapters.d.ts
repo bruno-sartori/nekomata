@@ -1,7 +1,9 @@
 import { LitElement } from 'lit';
+import { ChapterRange } from '../../types';
 export declare class TimelineChapters extends LitElement {
     static styles: import("lit").CSSResult;
-    constructor();
+    chapters: Array<ChapterRange>;
+    private playerCtx;
     render(): import("lit-html").TemplateResult<1>;
 }
 declare global {

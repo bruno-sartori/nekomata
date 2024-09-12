@@ -1,32 +1,59 @@
 import { LitElement, TemplateResult, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { editorTimelineStyle } from '../../styles/editor-timeline.style';
 import './editor-playback';
 import '../timeline/timeline-chapters';
-import FillTimelineEvent from '../../events/fill-timeline';
 import { getTimeString, isFloat } from '../../utils/time';
-import { CurrentlyGrabbed, RangeTimings } from '../../types';
+import { ChapterRange, CurrentlyGrabbed, FillTimeline, Progress, RangeTimings, SeekableStyle } from '../../types';
 
 @customElement('editor-timeline')
 export class EditorTimeline extends LitElement {
   static override styles = editorTimelineStyle;
 
-  @property({ type: Array })
+  @state()
   timings: Array<RangeTimings> = [];
 
-  @property({ type: Object })
+  @state()
   currentlyGrabbed?: CurrentlyGrabbed;
+
+  @state()
+  fillTimeline: FillTimeline = {
+    duration: 0,
+    metric: 'hours',
+    fill: false,
+  };
+
+  @state()
+  videoDuration = 0;
+
+  @state()
+  shouldShowGrabbers = false;
+
+  @state()
+  seekableRect?: DOMRect;
+
+  @state()
+  seekableStyle: SeekableStyle = {
+    backgroundImage: ''
+  };
+
+  @state()
+  progress: Progress = {};
+
+  @state()
+  snapshots: Array<HTMLCanvasElement> = [];
+
+  @state()
+  chapters: Array<ChapterRange> = [];
 
   private timelineInfo: Array<TemplateResult> = [];
 
-  constructor() {
-    super();
-
-    this.addEventListener(FillTimelineEvent.eventName, ((e: FillTimelineEvent) => {
-      const duration = e.detail.duration;
-      const metric = e.detail.metric;
-      this.fillTimeline(duration, metric);
-    }) as EventListener);
+  override updated(changedProperties: Map<string, unknown>) {
+    if (changedProperties.has("timeline")) {
+      if (this.fillTimeline.fill) {
+        this.handleFillTimeline(this.fillTimeline.duration, this.fillTimeline.metric);
+      }
+    }
   }
 
   override render() {
@@ -37,15 +64,27 @@ export class EditorTimeline extends LitElement {
             <div class="timeline__info" id="timelineInfo">
               ${this.timelineInfo}
             </div>
-            <timeline-chapters></timeline-chapters>
-            <editor-playback .timings=${this.timings} .currentlyGrabbed=${this.currentlyGrabbed}></editor-playback>
+            <timeline-chapters 
+              .chapters=${this.chapters}
+              .videoDuration=${this.videoDuration}
+            ></timeline-chapters>
+            <editor-playback 
+              .shouldShowGrabbers=${this.shouldShowGrabbers} 
+              .videoDuration=${this.videoDuration} 
+              .timings=${this.timings} 
+              .currentlyGrabbed=${this.currentlyGrabbed}
+              .seekableRect=${this.seekableRect}
+              .seekableStyle=${this.seekableStyle}
+              .progress=${this.progress}
+              .snapshots=${this.snapshots}
+              ></editor-playback>
           </div>
         </div>
       </div>
     `;
   }
 
-  private fillTimeline(duration: number, metric: 'hours' | 'minutes') {
+  private handleFillTimeline(duration: number, metric: 'hours' | 'minutes') {
     for (let i = 0; i <= duration + 0.5; i = i + 0.5) {
       this.timelineInfo.push(html`
         <div class="timeline__time ${isFloat(i) ? 'timeline__time--half' : ''}">${getTimeString(i, metric)}</div>

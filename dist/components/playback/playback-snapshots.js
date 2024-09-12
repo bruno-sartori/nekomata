@@ -5,19 +5,31 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { LitElement, html } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { playbackSnapshotsStyle } from '../../styles/playback-snapshots.style';
 let PlaybackSnapshots = class PlaybackSnapshots extends LitElement {
     constructor() {
-        super();
+        super(...arguments);
+        this.snapshots = [];
+    }
+    updated(changedProperties) {
+        console.log(changedProperties);
+        /*
+        if (changedProperties.has("snapshots")) {
+        }*/
     }
     render() {
         return html `
-      <div id="snapshots" class="playback__snapshots"></div>
+      <div id="snapshots" class="playback__snapshots">
+        ${this.snapshots.map(snapshot => snapshot)}
+      </div>
     `;
     }
 };
 PlaybackSnapshots.styles = playbackSnapshotsStyle;
+__decorate([
+    state()
+], PlaybackSnapshots.prototype, "snapshots", void 0);
 PlaybackSnapshots = __decorate([
     customElement('playback-snapshots')
 ], PlaybackSnapshots);

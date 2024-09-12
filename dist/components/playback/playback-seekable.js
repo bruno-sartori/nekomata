@@ -5,27 +5,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 import { LitElement, html } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, query, state } from 'lit/decorators.js';
 import { playbackSeekableStyle } from '../../styles/playback-seekable.style';
-import VideoLoadedEvent from '../../events/video-loaded';
 import VideoPauseEvent from '../../events/video-pause';
 import VideoSeekEvent from '../../events/video-seek';
 import UpdateProgressEvent from '../../events/update-progress';
 import UpdateCurrentlyGrabbedEvent from '../../events/update-currently-grabbed';
 import SeekableResizedEvent from '../../events/seekable-resized';
-import UpdateSeekableStyleEvent from '../../events/update-seekable-style';
 let PlaybackSeekable = class PlaybackSeekable extends LitElement {
     constructor() {
         super();
-        this.backgroundImage = '';
         this.timings = [];
         this.videoDuration = 0;
-        this.addEventListener(VideoLoadedEvent.eventName, ((e) => {
-            this.videoDuration = e.detail.duration;
-        }));
-        this.addEventListener(UpdateSeekableStyleEvent.eventName, ((e) => {
-            this.backgroundImage = e.detail.style.backgroundImage;
-        }));
+        this.seekableStyle = {
+            backgroundImage: ''
+        };
+        this.videoDuration = 0;
         document.addEventListener('DOMContentLoaded', () => {
             new ResizeObserver(() => {
                 this.dispatchEvent(new SeekableResizedEvent({ bubbles: true, composed: true, detail: { rect: this.seekable.getBoundingClientRect() } }));
@@ -34,7 +29,12 @@ let PlaybackSeekable = class PlaybackSeekable extends LitElement {
     }
     render() {
         return html `
-      <div @click="${this.updateProgress}" class="seekable" id="seekable" style="background-image: ${this.backgroundImage};"></div>
+      <div 
+        @click="${this.updateProgress}" 
+        class="seekable" 
+        id="seekable" 
+        style="background-image: ${this.seekableStyle.backgroundImage};"
+      ></div>
     `;
     }
     updateProgress(event) {
@@ -64,11 +64,17 @@ let PlaybackSeekable = class PlaybackSeekable extends LitElement {
 };
 PlaybackSeekable.styles = playbackSeekableStyle;
 __decorate([
-    property({ type: Array })
+    state()
 ], PlaybackSeekable.prototype, "timings", void 0);
+__decorate([
+    state()
+], PlaybackSeekable.prototype, "videoDuration", void 0);
 __decorate([
     query('#seekable')
 ], PlaybackSeekable.prototype, "seekable", void 0);
+__decorate([
+    state()
+], PlaybackSeekable.prototype, "seekableStyle", void 0);
 PlaybackSeekable = __decorate([
     customElement('playback-seekable')
 ], PlaybackSeekable);

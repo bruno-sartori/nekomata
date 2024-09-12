@@ -1,9 +1,8 @@
 import { LitElement } from 'lit';
+import { Progress } from '../../types';
 export declare class PlaybackProgress extends LitElement {
     static styles: import("lit").CSSResult;
-    private width;
-    private left;
-    constructor();
+    progress: Progress;
     render(): import("lit-html").TemplateResult<1>;
 }
 declare global {

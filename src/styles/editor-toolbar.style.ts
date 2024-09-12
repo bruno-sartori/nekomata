@@ -20,10 +20,16 @@ export const editorToolbarStyle = [
 
     .toolbar__button {
       border-radius: 6px;
-      background-color: var(--button-secondary);
+      background-color: #1c1c26;
       outline: none;
       border: none;
       padding: 8px;
+    }
+
+    .toolbar__timeline {
+      width: 100%;
+      display: flex;
+      flex: 1;
     }
   `
 ];

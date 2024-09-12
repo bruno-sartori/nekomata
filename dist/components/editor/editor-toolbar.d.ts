@@ -1,7 +1,5 @@
 import { LitElement } from 'lit';
-import { CurrentlyGrabbed, RangeTimings } from '../../types';
-import './editor-sidebar';
-import './editor-timeline';
+import { RangeTimings } from '../../types';
 import '../../icons/icon-plus';
 import '../../icons/icon-redo-arrow';
 import '../../icons/icon-save';
@@ -10,11 +8,10 @@ import '../../icons/icon-undo-arrow';
 export declare class EditorToolbar extends LitElement {
     static styles: import("lit").CSSResult[];
     timings: Array<RangeTimings>;
-    currentlyGrabbed?: CurrentlyGrabbed;
+    files?: FileList;
     private ranges;
     private selectedFile;
-    private videoDuration;
-    constructor();
+    updated(changedProperties: Map<string, unknown>): void;
     render(): import("lit-html").TemplateResult<1>;
     private saveRange;
     private exportJson;

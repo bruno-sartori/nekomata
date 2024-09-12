@@ -40,3 +40,18 @@ export type CurrentlyGrabbed = {
   index: number;
   type: string;
 };
+
+export type FillTimeline = {
+  duration: number;
+  metric: 'hours' | 'minutes',
+  fill: boolean;
+}
+
+export type SeekableStyle = {
+  backgroundImage: string;
+};
+
+export type Progress = {
+  width?: string;
+  left?: string;
+};

@@ -9,7 +9,7 @@ export class VideoUploader extends LitElement {
 
   override render() {
     return html`
-      <div class="video-uploader">
+      <div>
         <h2 class="video-uploader__title text">Add Video</h2>
         <div 
           class="video-uploader__picker text" 
@@ -63,7 +63,6 @@ export class VideoUploader extends LitElement {
   
     const files = (event.target as HTMLInputElement).files;
     if (files) {
-      this.dispatchEvent(new CustomEvent(FilesAddedEvent.eventName, { bubbles: true, composed: true, detail: { files }}))
       this.dispatchEvent(new FilesAddedEvent({ bubbles: true, composed: true, detail: { files }}));
     }
   }
