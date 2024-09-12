@@ -27,6 +27,7 @@ import UpdateTimingsEvent from './events/update-timings';
 import { provide } from '@lit/context';
 import { playerContext } from './contexts/player-context';
 import UpdatePlayerContextEvent from './events/update-player-context';
+import init, { add } from 'lib';
 let Nekomata = class Nekomata extends LitElement {
     constructor() {
         super();
@@ -45,11 +46,15 @@ let Nekomata = class Nekomata extends LitElement {
         this.snapshots = [];
         this.chapters = [];
         this.playerCtx = {
-            duration: 0,
             playing: false,
             seek: 0,
             src: ''
         };
+        init().then((res) => {
+            console.log('AQUQIIII', res);
+            const resp = add(1, 2);
+            console.log(resp);
+        });
         this.addEventListener(UpdateCurrentlyGrabbedEvent.eventName, ((e) => {
             this.currentlyGrabbed = e.detail;
         }));
@@ -73,10 +78,9 @@ let Nekomata = class Nekomata extends LitElement {
                 playing: true,
             };
         }));
-        this.addEventListener(VideoLoadedEvent.eventName, ((e) => {
+        this.addEventListener(VideoLoadedEvent.eventName, (() => {
             this.playerCtx = {
                 ...this.playerCtx,
-                duration: e.detail.duration
             };
         }));
         this.addEventListener(FillTimelineEvent.eventName, ((e) => {

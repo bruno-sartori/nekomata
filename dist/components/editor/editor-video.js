@@ -38,8 +38,8 @@ let EditorVideo = class EditorVideo extends LitElement {
         console.log(changedProperties);
         if (changedProperties.has('playerCtx')) {
             const oldPlayerContext = changedProperties.get('playerCtx');
-            if (this.playerCtx.src !== oldPlayerContext.src) {
-                this.video.src = this.playerCtx.src;
+            if (this.playerCtx?.src !== oldPlayerContext?.src) {
+                this.video.src = this.playerCtx?.src;
                 this.video?.play();
             }
         }
@@ -91,7 +91,8 @@ let EditorVideo = class EditorVideo extends LitElement {
         const timelineMetric = durationHours > 1 ? 'hours' : 'minutes';
         this.dispatchEvent(new FillTimelineEvent({ bubbles: true, composed: true, detail: { duration: timelineDuration, metric: timelineMetric } }));
     }
-    handleTogglePlayer() {
+    handleTogglePlayer(teste) {
+        console.log(teste);
         if (this.video?.paused) {
             this.video.play();
         }

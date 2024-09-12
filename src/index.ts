@@ -24,6 +24,8 @@ import { playerContext } from './contexts/player-context';
 import { PlayerContext } from './@types/contexts';
 import UpdatePlayerContextEvent from './events/update-player-context';
 
+import init, { add } from 'lib';
+
 @customElement('nekomata-editor')
 export class Nekomata extends LitElement {
   static override styles = nekomataStyle;
@@ -66,7 +68,6 @@ export class Nekomata extends LitElement {
 
   @provide({ context: playerContext })
   playerCtx: PlayerContext = {
-    duration: 0,
     playing: false,
     seek: 0,
     src: ''
@@ -74,6 +75,13 @@ export class Nekomata extends LitElement {
 
   constructor() {
     super();
+    
+    init().then((res) => {
+      console.log('AQUQIIII', res);
+      const resp = add(1, 2);
+      console.log(resp);
+    });
+
     
     this.addEventListener(UpdateCurrentlyGrabbedEvent.eventName, ((e: UpdateCurrentlyGrabbedEvent) => {
       this.currentlyGrabbed = e.detail;
@@ -102,10 +110,9 @@ export class Nekomata extends LitElement {
       };
     }) as EventListener);
 
-    this.addEventListener(VideoLoadedEvent.eventName, ((e: VideoLoadedEvent) => {
+    this.addEventListener(VideoLoadedEvent.eventName, (() => {
       this.playerCtx = {
         ...this.playerCtx,
-        duration: e.detail.duration
       };
     }) as EventListener);
 

@@ -47,8 +47,8 @@ export class EditorVideo extends LitElement {
     if (changedProperties.has('playerCtx')) {
       const oldPlayerContext = changedProperties.get('playerCtx') as PlayerContext;
 
-      if (this.playerCtx.src !== oldPlayerContext.src) {
-        this.video!.src = this.playerCtx.src;
+      if (this.playerCtx?.src !== oldPlayerContext?.src) {
+        this.video!.src = this.playerCtx?.src;
         this.video?.play();
       }
       
