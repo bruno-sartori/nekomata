@@ -9,13 +9,6 @@ export class PlaybackSnapshots extends LitElement {
   @state()
   snapshots: Array<HTMLCanvasElement> = [];
 
-  override updated(changedProperties: Map<string, unknown>) {
-    console.log(changedProperties)
-    /*
-    if (changedProperties.has("snapshots")) {
-    }*/
-  }
-
   override render() {
     return html`
       <div id="snapshots" class="playback__snapshots">

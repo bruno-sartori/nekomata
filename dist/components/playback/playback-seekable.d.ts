@@ -1,11 +1,11 @@
 import { LitElement } from 'lit';
-import { RangeTimings, SeekableStyle } from '../../types';
+import { RangeTimings } from '../../types';
 export declare class PlaybackSeekable extends LitElement {
     static styles: import("lit").CSSResult;
     timings: Array<RangeTimings>;
-    videoDuration: number;
     seekable?: HTMLDivElement;
-    seekableStyle: SeekableStyle;
+    private seekableCtx;
+    private playerCtx;
     constructor();
     render(): import("lit-html").TemplateResult<1>;
     private updateProgress;

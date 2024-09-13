@@ -1,12 +1,15 @@
 import { LitElement, html } from 'lit';
+import { consume } from '@lit/context';
 import { customElement, query, state } from 'lit/decorators.js';
 import { playbackSeekableStyle } from '../../styles/playback-seekable.style';
-import { RangeTimings, SeekableStyle } from '../../types';
-import VideoPauseEvent from '../../events/video-pause';
-import VideoSeekEvent from '../../events/video-seek';
+import { RangeTimings } from '../../types';
 import UpdateProgressEvent from '../../events/update-progress';
-import UpdateCurrentlyGrabbedEvent from '../../events/update-currently-grabbed';
-import SeekableResizedEvent from '../../events/seekable-resized';
+import UpdatePlayerContextEvent from '../../events/update-player-context';
+import UpdateSeekableContextEvent from '../../events/update-seekable-context';
+import UpdateGrabbersContextEvent from '../../events/update-grabbers-context';
+import { initialSeekableContext, seekableContext } from '../../contexts/seekable-context';
+import { PlayerContext, SeekableContext } from '../../@types/contexts';
+import { initialPlayerContext, playerContext } from '../../contexts/player-context';
 
 @customElement('playback-seekable')
 export class PlaybackSeekable extends LitElement {
@@ -15,25 +18,23 @@ export class PlaybackSeekable extends LitElement {
   @state()
   timings: Array<RangeTimings> = [];
 
-  @state()
-  videoDuration = 0;
-  
   @query('#seekable')
   seekable?: HTMLDivElement;
 
+  @consume({ context: seekableContext, subscribe: true })
   @state()
-  seekableStyle: SeekableStyle = {
-    backgroundImage: ''
-  };
+  private seekableCtx: SeekableContext = initialSeekableContext;
+
+  @consume({ context: playerContext, subscribe: true })
+  @state()
+  private playerCtx: PlayerContext = initialPlayerContext;
 
   constructor() {
     super();
 
-    this.videoDuration = 0;
-
     document.addEventListener('DOMContentLoaded', () => {
       new ResizeObserver(() => {
-        this.dispatchEvent(new SeekableResizedEvent({ bubbles: true, composed: true, detail: { rect: this.seekable!.getBoundingClientRect() }}))
+        this.dispatchEvent(new UpdateSeekableContextEvent({ rect: this.seekable!.getBoundingClientRect() }));
       }).observe(this.seekable!);
     });
   }
@@ -44,7 +45,7 @@ export class PlaybackSeekable extends LitElement {
         @click="${this.updateProgress}" 
         class="seekable" 
         id="seekable" 
-        style="background-image: ${this.seekableStyle.backgroundImage};"
+        style="background-image: ${this.seekableCtx.style.backgroundImage};"
       ></div>
     `;
   }
@@ -52,14 +53,16 @@ export class PlaybackSeekable extends LitElement {
   private updateProgress(event: MouseEvent) {
     const playbackRect = this.shadowRoot?.getElementById('seekable')?.getBoundingClientRect();
 
+    const duration = this.playerCtx.duration;
+
     if (playbackRect) {
-      this.dispatchEvent(new VideoPauseEvent({ bubbles: true, composed: true }));
-      let seekTime = ((event.clientX - playbackRect?.left) / playbackRect.width) * this.videoDuration;
+      this.dispatchEvent(new UpdatePlayerContextEvent({ playing: false }));
+      let seek = ((event.clientX - playbackRect?.left) / playbackRect.width) * duration;
       // find where seekTime is in the segment
       let index = -1
       let counter = 0
       for (let times of this.timings) {
-        if (seekTime >= times.start && seekTime <= times.end) {
+        if (seek >= times.start && seek <= times.end) {
           index = counter
         }
         counter += 1
@@ -69,11 +72,11 @@ export class PlaybackSeekable extends LitElement {
         return
       }
       const progressWidth = '0%' // Since the width is set later, this is necessary to hide weird UI
-      const progressLeft = `${this.timings[index].start / this.videoDuration * 100}%`;
+      const progressLeft = `${this.timings[index].start / duration * 100}%`;
 
       this.dispatchEvent(new UpdateProgressEvent({ bubbles: true, composed: true, detail: { width: progressWidth, left: progressLeft } }));
-      this.dispatchEvent(new VideoSeekEvent({ bubbles: true, composed: true, detail: { seekTime } }));
-      this.dispatchEvent(new UpdateCurrentlyGrabbedEvent({ bubbles: true, composed: true, detail: { 'index': index, 'type': 'start' } }));
+      this.dispatchEvent(new UpdatePlayerContextEvent({ seek }));
+      this.dispatchEvent(new UpdateGrabbersContextEvent({ currentlyGrabbed: { index, 'type': 'start' } }));
     }
   }
 }

@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { videoUploaderStyle } from '../styles/video-uploader.style';
-import FilesAddedEvent from '../events/files-added';
+import UpdatePlayerContextEvent from '../events/update-player-context';
 let VideoUploader = class VideoUploader extends LitElement {
     render() {
         return html `
@@ -47,7 +47,8 @@ let VideoUploader = class VideoUploader extends LitElement {
         const dt = event.dataTransfer;
         const files = dt?.files;
         if (files) {
-            this.dispatchEvent(new FilesAddedEvent({ bubbles: true, composed: true, detail: { files } }));
+            const src = URL.createObjectURL(files[0]);
+            this.dispatchEvent(new UpdatePlayerContextEvent({ src, playing: true }));
         }
     }
     onSelectFile(event) {
@@ -55,7 +56,8 @@ let VideoUploader = class VideoUploader extends LitElement {
         event.preventDefault();
         const files = event.target.files;
         if (files) {
-            this.dispatchEvent(new FilesAddedEvent({ bubbles: true, composed: true, detail: { files } }));
+            const src = URL.createObjectURL(files[0]);
+            this.dispatchEvent(new UpdatePlayerContextEvent({ src, playing: true }));
         }
     }
 };

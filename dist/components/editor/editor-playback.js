@@ -15,29 +15,16 @@ let EditorPlayback = class EditorPlayback extends LitElement {
     constructor() {
         super(...arguments);
         this.timings = [];
-        this.videoDuration = 0;
-        this.shouldShowGrabbers = false;
-        this.seekableStyle = {
-            backgroundImage: ''
-        };
         this.progress = {};
         this.snapshots = [];
     }
     render() {
         return html `
       <div class="playback" id="playback">
-        <playback-grabbers 
-          .shouldShowGrabbers=${this.shouldShowGrabbers} 
-          .videoDuration=${this.videoDuration} 
-          .timings=${this.timings}
-          .currentlyGrabbed=${this.currentlyGrabbed}
-          .seekableRect=${this.seekableRect}
-        ></playback-grabbers>
+        <playback-grabbers .timings=${this.timings}></playback-grabbers>
         <playback-snapshots .snapshots=${this.snapshots}></playback-snapshots>
         <playback-seekable 
-          .videoDuration=${this.videoDuration} 
           .timings=${this.timings}
-          .seekableStyle=${this.seekableStyle}
         ></playback-seekable>
         <playback-progress .progress=${this.progress}></playback-progress>
       </div>
@@ -48,21 +35,6 @@ EditorPlayback.styles = editorPlaybackStyle;
 __decorate([
     state()
 ], EditorPlayback.prototype, "timings", void 0);
-__decorate([
-    state()
-], EditorPlayback.prototype, "currentlyGrabbed", void 0);
-__decorate([
-    state()
-], EditorPlayback.prototype, "videoDuration", void 0);
-__decorate([
-    state()
-], EditorPlayback.prototype, "shouldShowGrabbers", void 0);
-__decorate([
-    state()
-], EditorPlayback.prototype, "seekableRect", void 0);
-__decorate([
-    state()
-], EditorPlayback.prototype, "seekableStyle", void 0);
 __decorate([
     state()
 ], EditorPlayback.prototype, "progress", void 0);

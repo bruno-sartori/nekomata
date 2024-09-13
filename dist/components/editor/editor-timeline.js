@@ -10,29 +10,23 @@ import { editorTimelineStyle } from '../../styles/editor-timeline.style';
 import './editor-playback';
 import '../timeline/timeline-chapters';
 import { getTimeString, isFloat } from '../../utils/time';
+import { consume } from '@lit/context';
+import { initialTimelineContext, timelineContext } from '../../contexts/timeline-context';
 let EditorTimeline = class EditorTimeline extends LitElement {
     constructor() {
         super(...arguments);
         this.timings = [];
-        this.fillTimeline = {
-            duration: 0,
-            metric: 'hours',
-            fill: false,
-        };
-        this.videoDuration = 0;
-        this.shouldShowGrabbers = false;
-        this.seekableStyle = {
-            backgroundImage: ''
-        };
+        this.timelineCtx = initialTimelineContext;
         this.progress = {};
         this.snapshots = [];
         this.chapters = [];
         this.timelineInfo = [];
     }
     updated(changedProperties) {
-        if (changedProperties.has("timeline")) {
-            if (this.fillTimeline.fill) {
-                this.handleFillTimeline(this.fillTimeline.duration, this.fillTimeline.metric);
+        if (changedProperties.has('timelineCtx')) {
+            const oldTimelineCtx = changedProperties.get('timelineCtx');
+            if ((this.timelineCtx?.fill !== oldTimelineCtx?.fill) && this.timelineCtx.fill) {
+                this.handleFillTimeline(this.timelineCtx.duration, this.timelineCtx.metric);
             }
         }
     }
@@ -46,15 +40,9 @@ let EditorTimeline = class EditorTimeline extends LitElement {
             </div>
             <timeline-chapters 
               .chapters=${this.chapters}
-              .videoDuration=${this.videoDuration}
             ></timeline-chapters>
             <editor-playback 
-              .shouldShowGrabbers=${this.shouldShowGrabbers} 
-              .videoDuration=${this.videoDuration} 
               .timings=${this.timings} 
-              .currentlyGrabbed=${this.currentlyGrabbed}
-              .seekableRect=${this.seekableRect}
-              .seekableStyle=${this.seekableStyle}
               .progress=${this.progress}
               .snapshots=${this.snapshots}
               ></editor-playback>
@@ -76,23 +64,9 @@ __decorate([
     state()
 ], EditorTimeline.prototype, "timings", void 0);
 __decorate([
+    consume({ context: timelineContext, subscribe: true }),
     state()
-], EditorTimeline.prototype, "currentlyGrabbed", void 0);
-__decorate([
-    state()
-], EditorTimeline.prototype, "fillTimeline", void 0);
-__decorate([
-    state()
-], EditorTimeline.prototype, "videoDuration", void 0);
-__decorate([
-    state()
-], EditorTimeline.prototype, "shouldShowGrabbers", void 0);
-__decorate([
-    state()
-], EditorTimeline.prototype, "seekableRect", void 0);
-__decorate([
-    state()
-], EditorTimeline.prototype, "seekableStyle", void 0);
+], EditorTimeline.prototype, "timelineCtx", void 0);
 __decorate([
     state()
 ], EditorTimeline.prototype, "progress", void 0);

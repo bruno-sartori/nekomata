@@ -15,5 +15,13 @@ export default {
         webcomponents: false,
       },
     }),
+    {
+      name: 'add-headers',
+      transform(context) {
+        context.set('Cross-Origin-Embedder-Policy', 'require-corp');
+        context.set('Cross-Origin-Opener-Policy', 'same-origin');
+        return context; 
+      }
+    }
   ],
 };

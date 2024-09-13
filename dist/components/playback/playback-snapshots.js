@@ -12,12 +12,6 @@ let PlaybackSnapshots = class PlaybackSnapshots extends LitElement {
         super(...arguments);
         this.snapshots = [];
     }
-    updated(changedProperties) {
-        console.log(changedProperties);
-        /*
-        if (changedProperties.has("snapshots")) {
-        }*/
-    }
     render() {
         return html `
       <div id="snapshots" class="playback__snapshots">

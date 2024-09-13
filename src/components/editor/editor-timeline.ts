@@ -4,7 +4,10 @@ import { editorTimelineStyle } from '../../styles/editor-timeline.style';
 import './editor-playback';
 import '../timeline/timeline-chapters';
 import { getTimeString, isFloat } from '../../utils/time';
-import { ChapterRange, CurrentlyGrabbed, FillTimeline, Progress, RangeTimings, SeekableStyle } from '../../types';
+import { ChapterRange, Progress, RangeTimings } from '../../types';
+import { consume } from '@lit/context';
+import { initialTimelineContext, timelineContext } from '../../contexts/timeline-context';
+import { TimelineContext } from '../../@types/contexts';
 
 @customElement('editor-timeline')
 export class EditorTimeline extends LitElement {
@@ -13,29 +16,9 @@ export class EditorTimeline extends LitElement {
   @state()
   timings: Array<RangeTimings> = [];
 
+  @consume({ context: timelineContext, subscribe: true })
   @state()
-  currentlyGrabbed?: CurrentlyGrabbed;
-
-  @state()
-  fillTimeline: FillTimeline = {
-    duration: 0,
-    metric: 'hours',
-    fill: false,
-  };
-
-  @state()
-  videoDuration = 0;
-
-  @state()
-  shouldShowGrabbers = false;
-
-  @state()
-  seekableRect?: DOMRect;
-
-  @state()
-  seekableStyle: SeekableStyle = {
-    backgroundImage: ''
-  };
+  private timelineCtx: TimelineContext = initialTimelineContext;
 
   @state()
   progress: Progress = {};
@@ -49,9 +32,11 @@ export class EditorTimeline extends LitElement {
   private timelineInfo: Array<TemplateResult> = [];
 
   override updated(changedProperties: Map<string, unknown>) {
-    if (changedProperties.has("timeline")) {
-      if (this.fillTimeline.fill) {
-        this.handleFillTimeline(this.fillTimeline.duration, this.fillTimeline.metric);
+    if (changedProperties.has('timelineCtx')) {
+      const oldTimelineCtx = changedProperties.get('timelineCtx') as TimelineContext;
+
+      if ((this.timelineCtx?.fill !== oldTimelineCtx?.fill) && this.timelineCtx.fill) {
+        this.handleFillTimeline(this.timelineCtx.duration, this.timelineCtx.metric);
       }
     }
   }
@@ -66,15 +51,9 @@ export class EditorTimeline extends LitElement {
             </div>
             <timeline-chapters 
               .chapters=${this.chapters}
-              .videoDuration=${this.videoDuration}
             ></timeline-chapters>
             <editor-playback 
-              .shouldShowGrabbers=${this.shouldShowGrabbers} 
-              .videoDuration=${this.videoDuration} 
               .timings=${this.timings} 
-              .currentlyGrabbed=${this.currentlyGrabbed}
-              .seekableRect=${this.seekableRect}
-              .seekableStyle=${this.seekableStyle}
               .progress=${this.progress}
               .snapshots=${this.snapshots}
               ></editor-playback>

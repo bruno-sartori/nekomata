@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { videoUploaderStyle } from '../styles/video-uploader.style';
-import FilesAddedEvent from '../events/files-added';
+import UpdatePlayerContextEvent from '../events/update-player-context';
 
 @customElement('video-uploader')
 export class VideoUploader extends LitElement {
@@ -53,7 +53,8 @@ export class VideoUploader extends LitElement {
     const files = dt?.files;
 
     if (files) {
-      this.dispatchEvent(new FilesAddedEvent({ bubbles: true, composed: true, detail: { files }}));
+      const src = URL.createObjectURL(files[0]);
+      this.dispatchEvent(new UpdatePlayerContextEvent({ src, playing: true }));
     }
   }
 
@@ -62,8 +63,10 @@ export class VideoUploader extends LitElement {
     event.preventDefault();
   
     const files = (event.target as HTMLInputElement).files;
+    
     if (files) {
-      this.dispatchEvent(new FilesAddedEvent({ bubbles: true, composed: true, detail: { files }}));
+      const src = URL.createObjectURL(files[0]);
+      this.dispatchEvent(new UpdatePlayerContextEvent({ src, playing: true }));
     }
   }
 }

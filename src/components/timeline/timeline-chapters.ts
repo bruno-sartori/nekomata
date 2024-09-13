@@ -3,7 +3,7 @@ import { customElement, state } from 'lit/decorators.js';
 import { timelineChaptersStyle } from '../../styles/timeline-chapters.style';
 import { ChapterRange } from '../../types';
 import { consume } from '@lit/context';
-import { playerContext } from '../../contexts/player-context';
+import { initialPlayerContext, playerContext } from '../../contexts/player-context';
 import { PlayerContext } from '../../@types/contexts';
 
 @customElement('timeline-chapters')
@@ -15,20 +15,17 @@ export class TimelineChapters extends LitElement {
 
   @consume({ context: playerContext, subscribe: true })
   @state()
-  private playerCtx: PlayerContext = {
-    playing: false,
-    seek: 0,
-    src: '',
-    video: undefined
-  };
+  private playerCtx: PlayerContext = initialPlayerContext;
 
   override render() {
+    const duration = this.playerCtx.video?.duration ?? 1;
+
     return html`
       <div class="chapters" id="chapters">
         ${this.chapters.map((chapter) => {
           const sizeRange = [
-            chapter.range.start / (this.playerCtx.video?.duration ?? 1) * 100,
-            chapter.range.end / (this.playerCtx.video?.duration ?? 1) * 100
+            chapter.range.start / duration * 100,
+            chapter.range.end / duration * 100
           ];
           
           return html`

@@ -58,3 +58,19 @@ export const getTimeString = (timeNumber: number, metric: 'hours' | 'minutes') =
       return floatToMMSS(timeNumber);
   }
 };
+
+
+export function secondsToHHMMSS(seconds: number) {
+  // Calcula as horas, minutos e segundos
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  
+  // Formata cada parte para ter dois dígitos
+  const hoursStr = String(hours).padStart(2, '0');
+  const minutesStr = String(minutes).padStart(2, '0');
+  const secsStr = String(secs).padStart(2, '0');
+  
+  // Retorna a string no formato HH:MM:SS
+  return `${hoursStr}:${minutesStr}:${secsStr}`;
+}

@@ -1,16 +1,11 @@
 import { LitElement, TemplateResult } from 'lit';
 import './editor-playback';
 import '../timeline/timeline-chapters';
-import { ChapterRange, CurrentlyGrabbed, FillTimeline, Progress, RangeTimings, SeekableStyle } from '../../types';
+import { ChapterRange, Progress, RangeTimings } from '../../types';
 export declare class EditorTimeline extends LitElement {
     static styles: import("lit").CSSResult;
     timings: Array<RangeTimings>;
-    currentlyGrabbed?: CurrentlyGrabbed;
-    fillTimeline: FillTimeline;
-    videoDuration: number;
-    shouldShowGrabbers: boolean;
-    seekableRect?: DOMRect;
-    seekableStyle: SeekableStyle;
+    private timelineCtx;
     progress: Progress;
     snapshots: Array<HTMLCanvasElement>;
     chapters: Array<ChapterRange>;

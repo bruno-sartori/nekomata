@@ -36,10 +36,14 @@
     "checksize": "rollup -c ; cat dist/index.bundled.js | gzip -9 | wc -c ; rm dist/index.bundled.js",
     "prepare": "husky",
     "stylelint": "npx stylelint src/**/*.ts",
-    "postcss": "./node_modules/postcss/lib/postcss.js -r dist/**/*.js"
+    "postcss": "./node_modules/postcss/lib/postcss.js -r dist/**/*.js",
+    "download": "node ./scripts/download-assets.js"
   },
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1",
     "@lit/context": "^1.1.2",
+    "express": "^4.21.0",
     "lib": "file:./lib/target/pkg",
     "lit": "^3.2.0"
   },
@@ -71,6 +75,7 @@
     "stylelint": "^16.9.0",
     "stylelint-config-standard": "^36.0.1",
     "tailwindcss": "^3.4.10",
+    "tar": "^6.1.15",
     "typescript": "~5.5.0"
   },
   "lint-staged": {

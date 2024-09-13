@@ -28,17 +28,18 @@ export type CurrentlyGrabbed = {
     index: number;
     type: string;
 };
-export type FillTimeline = {
-    duration: number;
-    metric: 'hours' | 'minutes';
-    fill: boolean;
-};
 export type SeekableStyle = {
-    backgroundImage: string;
+    backgroundImage?: string;
 };
 export type Progress = {
     width?: string;
     left?: string;
 };
+declare global {
+    interface Window {
+        FFmpegUtil: any;
+        FFmpegWASM: any;
+    }
+}
 export {};
 //# sourceMappingURL=types.d.ts.map
