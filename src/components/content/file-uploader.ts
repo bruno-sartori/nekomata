@@ -6,27 +6,21 @@ import { contentContext, initialContentContext } from '../../contexts/content-co
 import { ContentContext } from '../../@types/contexts';
 import UpdateContentContextEvent from '../../events/update-content-context';
 import './uploaded-file';
-// import { secondsToHHMMSS } from '../../utils/time';
-import { FFmpeg } from "@ffmpeg/ffmpeg";
-import { toBlobURL, fetchFile } from "@ffmpeg/util";
-// import { secondsToHHMMSS } from '../../utils/time';
+import fileUploadWorkerBlob from '../../workers/file-upload-worker';
 
 @customElement('file-uploader')
 export class FileUploader extends LitElement {
   static override styles = fileUploaderStyle;
 
-  private ffmpeg: FFmpeg | null = null;
-
   @consume({ context: contentContext, subscribe: true })
   @state()
   private contentCtx: ContentContext = initialContentContext;
 
+  @state()
+  uploadDate?: Date = undefined;
+
   constructor() {
     super();
-    
-    this.loadFFmpeg().then(() => {
-      console.log(this.ffmpeg);
-    });
   }
 
   override render() {
@@ -47,8 +41,8 @@ export class FileUploader extends LitElement {
         </div>
         <h2 class="title-secondary text">Uploaded Files</h2>
         <div class="file-uploader__uploaded-files">
-          ${this.contentCtx.files?.length && Array.from(this.contentCtx.files).map((file, i) => html`
-            <uploaded-file .file=${file} .progress=${this.contentCtx.progress[i]}></uploaded-file>
+          ${this.contentCtx.files.map((file, index) => html`
+            <uploaded-file .file=${file} .index=${index} .uploadDate=${this.uploadDate}></uploaded-file>
           `)}
         </div>
       </div>
@@ -80,10 +74,13 @@ export class FileUploader extends LitElement {
     event.preventDefault();
 
     const dt = event.dataTransfer;
-    const files = dt?.files;
+    
+    const files = Array.from(dt?.files as FileList);
 
     if (files) {
-      this.dispatchEvent(new UpdateContentContextEvent({ files }));
+      this.uploadDate = new Date();
+      this.dispatchEvent(new UpdateContentContextEvent({ files, progress: Array(files.length).fill(0) }));
+      this.uploadFiles(files);
     }
   }
 
@@ -91,141 +88,50 @@ export class FileUploader extends LitElement {
     event.stopPropagation();
     event.preventDefault();
 
-    const files = (event.target as HTMLInputElement).files;
+    const files = Array.from((event.target as HTMLInputElement).files as FileList);
 
     if (files) {
-      this.dispatchEvent(new UpdateContentContextEvent({ files, progress: new Array(files.length) }));
-
-      for (let i = 0, len = files.length; i < len; i++) {
-        this.compressAndUploadChunks(files[0], (percentageComplete: number) => {
-          const progress = this.contentCtx.progress;
-          progress[i] = percentageComplete;
-          this.dispatchEvent(new UpdateContentContextEvent({ progress }));
-        });
-      }
+      this.uploadDate = new Date();
+      this.dispatchEvent(new UpdateContentContextEvent({ files, progress: Array(files.length).fill(0) }));
+      this.uploadFiles(files);
     }
   }
 
-  // Function to handle compressing and uploading each chunk
-  private async compressAndUploadChunks(videoFile: File, onProgress: (progress: number) => void) {
-    const chunkSize = 1024 * 1024; // 1MB chunk size
-    const totalSize = videoFile.size;
-    let offset = 0;
+  private uploadFiles(files: File[]) {
+    let maxWorkers = navigator.hardwareConcurrency || 4;
+    const totalWorkers = files.length;
+    let index = 0;
+    const start = (new Date).getTime();
 
-    await new Promise((resolve) => {
-      this.compressFile(videoFile, (compressedChunk) => {
-        console.log('Received message from worker:');
-        console.log(`Compressed chunk ${offset / chunkSize + 1} of ${Math.ceil(totalSize / chunkSize)}`);
-
-        // Upload the compressed chunk to the server
-        this.uploadChunk(compressedChunk, offset, totalSize, onProgress).then(() => {
-          //offset += chunkSize; // Move to the next chunk
-
-          // Calculate the upload progress
-          //const progress = Math.min((offset / totalSize) * 100, 100);
-          //onProgress(progress); // Call the progress callback
-
-          resolve(true);
-        });
-      });
-    });
-  }
-
-  private async loadFFmpeg() {
-    this.ffmpeg = new FFmpeg();
-    const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/esm";
+    const runWorker = (worker: Worker) => {
+      worker.onmessage = (event) => {
+        console.log(event);
+        if (event.data.type === 'done') {
+          console.log('worker.onmessage i = ' + event.data + '\n');
   
-    this.ffmpeg.on("log", ({ message }: { message: any }) => {
-      console.log(message);
-    })
-
-    this.ffmpeg.on("progress", ({ progress }: { progress: any }) => {
-      console.log(`${progress * 100} %`);
-    });
-
-    await this.ffmpeg.load({
-      coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
-      wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
-    });
-  }
-
-  private async compressFile(file: File, callback: (file: Blob) => void): Promise<any> {
-    try {
-      if (!this.ffmpeg?.loaded) {
-        await this.ffmpeg?.load();
-      }
-      
-      console.log(this.ffmpeg)
-
-      await this.ffmpeg!.writeFile(file.name, await fetchFile(file));
-      console.log('Compressing chunk...');
-
-      // const chunkSize = 1024 * 1024; // 1MB chunk size
-      const totalSize = file.size;
-      let offset = 0;
-
-      console.log('AQUI')
-      
-      // while (offset < totalSize) {
-        // await this.ffmpeg!.exec(['-i', file.name, '-ss', secondsToHHMMSS(offset), '-t', '10', 'input_chunk.mp4']);
-        console.log('Chunk extracted!');
-        // Run FFmpeg to compress the chunk
-        await this.ffmpeg!.exec(['-i', file.name, '-vcodec', 'libx264', '-crf', '28', 'input_chunk.mp4']);
-        console.log('Compression complete!');
-      
-        // Read the compressed chunk
-        const compressedData = await this.ffmpeg!.readFile('input_chunk.mp4');
-        console.log('compressedData', compressedData);
+          if (index < totalWorkers) {
+            runWorker(worker);
+          } else {
+            if (--maxWorkers === 0) {
+              console.log((new Date).getTime() - start);
+            }
   
-        const data = new Uint8Array(compressedData as ArrayBuffer);
-      
-        // Convert the result into a Blob and send it back to the main thread
-        const compressedChunk = new Blob([data.buffer], { type: 'video/mp4' });
-        console.log('CALLBACK')
-        callback(compressedChunk);
-      
-        offset += totalSize;
-      // }
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
-  // Function to upload a chunk of the compressed video
-  private uploadChunk(compressedChunk: any, offset: number, totalSize: number, onProgress: (progress: number) => void): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      const formData = new FormData();
-      formData.append('file', compressedChunk, `video_chunk_${offset}.mp4`);
-      formData.append('offset', offset.toString());
-      formData.append('totalSize', totalSize.toString());
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'http://localhost:3000/upload-chunk', true);
-
-      xhr.upload.addEventListener('progress', function(e){
-        if(e.lengthComputable){
-          let uploadPercent = e.loaded / e.total;
-          uploadPercent = (uploadPercent * 100);
-
-          onProgress(uploadPercent);  
-        }
-      }, false);
-
-      xhr.onload = function () {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          resolve(true);
+            worker.terminate();
+          }
         } else {
-          reject(new Error(`Upload failed with status: ${xhr.status}`));
+          const progress = this.contentCtx.progress;
+          progress[event.data.index] = event.data.value;
+          this.dispatchEvent(new UpdateContentContextEvent({ progress }));
         }
       };
+      
+      worker.postMessage({ file: files[index], index });
+      index++;
+    }
 
-      xhr.onerror = function () {
-        reject(new Error('Upload failed due to network error'));
-      };
-
-      xhr.send(formData);
-    });
+    for (var i = 0; i < maxWorkers && i < files.length; i++) {
+      runWorker(new Worker(fileUploadWorkerBlob));
+    }
   }
 }
 

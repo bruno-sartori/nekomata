@@ -2,7 +2,7 @@ import { CurrentlyGrabbed, SeekableStyle } from "../types";
 import { DeepOptional } from "./deep-optional";
 
 export type ContentContext = {
-  files: FileList | undefined;
+  files: File[];
   progress: Array<number>;
 };
 export type ContentContextUnreq = DeepOptional<ContentContext>;

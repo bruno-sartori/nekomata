@@ -2,11 +2,10 @@ import { LitElement, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { nekomataStyle } from './styles/nekomata.style';
 import { provide } from '@lit/context';
-import { GrabbersContext } from './@types/contexts';
-import { initialGrabbersContext } from './contexts/grabbers-context';
+import { ContentContext } from './@types/contexts';
 import init, { add } from 'lib';
 import './components/content/file-uploader';
-import { contentContext } from './contexts/content-context';
+import { contentContext, initialContentContext } from './contexts/content-context';
 import UpdateContentContextEvent from './events/update-content-context';
 
 @customElement('nekomata-editor')
@@ -14,7 +13,7 @@ export class Nekomata extends LitElement {
   static override styles = nekomataStyle;
 
   @provide({ context: contentContext })
-  private contentCtx: GrabbersContext = initialGrabbersContext;
+  private contentCtx: ContentContext = initialContentContext;
 
   constructor() {
     super();
@@ -28,7 +27,9 @@ export class Nekomata extends LitElement {
     this.addEventListener(UpdateContentContextEvent.eventName, ((e: UpdateContentContextEvent) => {
       this.contentCtx = {
         ...this.contentCtx,
-        ...e.detail
+        ...e.detail,
+        progress: e.detail.progress as Array<number>,
+        files: (e.detail?.files || this.contentCtx.files) as File[],
       };
     }) as EventListener);
   }

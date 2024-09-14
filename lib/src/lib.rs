@@ -1,5 +1,7 @@
 use wasm_bindgen::prelude::*;
 
+mod file_upload;
+
 #[wasm_bindgen]
 pub fn add(left: i32, right: i32) -> i32 {
   left + right
