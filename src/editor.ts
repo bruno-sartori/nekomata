@@ -56,8 +56,7 @@ export class NekomataEditor extends LitElement {
   constructor() {
     super();
     
-    init().then((res) => {
-      console.log('AQUQIIII', res);
+    init().then(() => {
       const resp = add(1, 2);
       console.log(resp);
     });
@@ -116,7 +115,6 @@ export class NekomataEditor extends LitElement {
     }) as EventListener);
 
     this.addEventListener(UpdateTimingsEvent.eventName, ((e: UpdateTimingsEvent) => {
-      console.log('UpdateTimingsEvent', e.detail)
       this.timings = e.detail.timings || [];
     }) as EventListener);
   }

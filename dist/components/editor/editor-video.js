@@ -28,7 +28,6 @@ let EditorVideo = class EditorVideo extends LitElement {
         this.dispatchEvent(new UpdatePlayerContextEvent({ video: this.video }));
     }
     updated(changedProperties) {
-        console.log(changedProperties);
         if (changedProperties.has('playerCtx')) {
             const oldPlayerContext = changedProperties.get('playerCtx');
             if (this.playerCtx?.src !== oldPlayerContext?.src) {
@@ -50,7 +49,6 @@ let EditorVideo = class EditorVideo extends LitElement {
         if (changedProperties.has('timings') && this.shouldAddActiveSegments) {
             this.addActiveSegments();
         }
-        console.log(changedProperties);
     }
     render() {
         return html `
@@ -83,8 +81,7 @@ let EditorVideo = class EditorVideo extends LitElement {
             fill: true
         }));
     }
-    handleTogglePlayer(teste) {
-        console.log(teste);
+    handleTogglePlayer() {
         if (this.video?.paused) {
             this.video.play();
         }

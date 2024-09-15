@@ -3,6 +3,7 @@ import { customElement } from 'lit/decorators.js';
 
 @customElement('icon-trash')
 export class IconTrash extends LitElement {
+ 
 
   override render() {
     return html`

@@ -5,8 +5,11 @@ import { consume } from '@lit/context';
 import { contentContext, initialContentContext } from '../../contexts/content-context';
 import { ContentContext } from '../../@types/contexts';
 import UpdateContentContextEvent from '../../events/update-content-context';
-import './uploaded-file';
+import ShowMetadataEvent from '../../events/show-metadata';
 import fileUploadWorkerBlob from '../../workers/file-upload-worker';
+import './uploaded-file';
+import './metadata-info';
+import { Content } from '../../types';
 
 @customElement('file-uploader')
 export class FileUploader extends LitElement {
@@ -17,10 +20,14 @@ export class FileUploader extends LitElement {
   private contentCtx: ContentContext = initialContentContext;
 
   @state()
-  uploadDate?: Date = undefined;
+  metadataIdx: number = -1;
 
   constructor() {
     super();
+
+    this.addEventListener(ShowMetadataEvent.eventName, ((e: ShowMetadataEvent) => {
+      this.metadataIdx = e.detail.index;
+    }) as EventListener);
   }
 
   override render() {
@@ -41,11 +48,19 @@ export class FileUploader extends LitElement {
         </div>
         <h2 class="title-secondary text">Uploaded Files</h2>
         <div class="file-uploader__uploaded-files">
-          ${this.contentCtx.files.map((file, index) => html`
-            <uploaded-file .file=${file} .index=${index} .uploadDate=${this.uploadDate}></uploaded-file>
+          ${Object.keys(this.contentCtx).map((key, index) => html`
+            <uploaded-file 
+              .content=${this.contentCtx[key]} 
+              .index=${index}
+            ></uploaded-file>
           `)}
         </div>
       </div>
+      <metadata-info 
+        .active=${this.metadataIdx !== -1}
+        .index=${this.metadataIdx}
+        .metadata=${this.contentCtx[this.metadataIdx]?.metadata}
+      ></metadata-info>
     `;
   }
 
@@ -78,8 +93,27 @@ export class FileUploader extends LitElement {
     const files = Array.from(dt?.files as FileList);
 
     if (files) {
-      this.uploadDate = new Date();
-      this.dispatchEvent(new UpdateContentContextEvent({ files, progress: Array(files.length).fill(0) }));
+      const newContentCtx: ContentContext = files.reduce((acc: any, _, index: number) => {
+        const content: Content = {
+          file: files[index],
+          progress: 0,
+          metadata: {
+            title: '',
+            description: '',
+            director: '',
+            cast: [],
+            keywords: [],
+            genres: [],
+            uploadDate: new Date(),
+            fileInfo: {},
+          },
+        };
+
+        acc[index] = content;
+        return acc;
+      }, {});
+
+      this.dispatchEvent(new UpdateContentContextEvent(newContentCtx));
       this.uploadFiles(files);
     }
   }
@@ -91,8 +125,26 @@ export class FileUploader extends LitElement {
     const files = Array.from((event.target as HTMLInputElement).files as FileList);
 
     if (files) {
-      this.uploadDate = new Date();
-      this.dispatchEvent(new UpdateContentContextEvent({ files, progress: Array(files.length).fill(0) }));
+      const newContentCtx: ContentContext = files.reduce((acc: any, _, index: number) => {
+        const content: Content = {
+          file: files[index],
+          progress: 0,
+          metadata: {
+            title: '',
+            description: '',
+            director: '',
+            cast: [],
+            keywords: [],
+            genres: [],
+            uploadDate: new Date(),
+            fileInfo: {},
+          },
+        };
+        acc[index] = content;
+        return acc;
+      }, {});
+
+      this.dispatchEvent(new UpdateContentContextEvent(newContentCtx));
       this.uploadFiles(files);
     }
   }
@@ -105,10 +157,7 @@ export class FileUploader extends LitElement {
 
     const runWorker = (worker: Worker) => {
       worker.onmessage = (event) => {
-        console.log(event);
         if (event.data.type === 'done') {
-          console.log('worker.onmessage i = ' + event.data + '\n');
-  
           if (index < totalWorkers) {
             runWorker(worker);
           } else {
@@ -119,13 +168,17 @@ export class FileUploader extends LitElement {
             worker.terminate();
           }
         } else {
-          const progress = this.contentCtx.progress;
-          progress[event.data.index] = event.data.value;
-          this.dispatchEvent(new UpdateContentContextEvent({ progress }));
+          this.dispatchEvent(new UpdateContentContextEvent({ 
+            ...this.contentCtx, 
+            [event.data.index]: {
+              ...this.contentCtx[event.data.index],
+              progress: event.data.value
+            }
+          }));
         }
       };
       
-      worker.postMessage({ file: files[index], index });
+      worker.postMessage({ file: this.contentCtx[index].file, index });
       index++;
     }
 

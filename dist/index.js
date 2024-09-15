@@ -16,24 +16,20 @@ let Nekomata = class Nekomata extends LitElement {
     constructor() {
         super();
         this.contentCtx = initialContentContext;
-        init().then((res) => {
-            console.log('AQUQIIII', res);
+        init().then(() => {
             const resp = add(1, 2);
             console.log(resp);
         });
         this.addEventListener(UpdateContentContextEvent.eventName, ((e) => {
-            this.contentCtx = {
-                ...this.contentCtx,
-                ...e.detail,
-                progress: e.detail.progress,
-                files: (e.detail?.files || this.contentCtx.files),
-            };
+            this.contentCtx = { ...e.detail };
         }));
     }
     render() {
         return html `
       <main class="nekomata-main">
-        <file-uploader></file-uploader>
+        <div class="nekomata-main__container">	
+          <file-uploader></file-uploader>
+        </div>
       </main>
     `;
     }
@@ -43,7 +39,7 @@ __decorate([
     provide({ context: contentContext })
 ], Nekomata.prototype, "contentCtx", void 0);
 Nekomata = __decorate([
-    customElement('nekomata-editor')
+    customElement('nekomata-main')
 ], Nekomata);
 export { Nekomata };
 //# sourceMappingURL=index.js.map

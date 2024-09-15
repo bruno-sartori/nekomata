@@ -1,9 +1,8 @@
-import { CurrentlyGrabbed, SeekableStyle } from "../types";
+import { Content, CurrentlyGrabbed, SeekableStyle } from "../types";
 import { DeepOptional } from "./deep-optional";
 
 export type ContentContext = {
-  files: File[];
-  progress: Array<number>;
+  [key: string]: Content;
 };
 export type ContentContextUnreq = DeepOptional<ContentContext>;
 

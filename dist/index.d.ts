@@ -1,8 +1,9 @@
 import { LitElement } from 'lit';
+import { ContentContext } from './@types/contexts';
 import './components/content/file-uploader';
 export declare class Nekomata extends LitElement {
-    static styles: import("lit").CSSResult;
-    private contentCtx;
+    static styles: import("lit").CSSResult[];
+    contentCtx: ContentContext;
     constructor();
     render(): import("lit-html").TemplateResult<1>;
 }

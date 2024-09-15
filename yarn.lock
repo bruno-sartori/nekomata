@@ -3952,6 +3952,11 @@ fd-slicer@~1.1.0:
   dependencies:
     pend "~1.2.0"
 
+ffprobe-wasm@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/ffprobe-wasm/-/ffprobe-wasm-0.3.1.tgz#c4549a4d64b2138084b0afa4d419684ec1b04dd5"
+  integrity sha512-Pyrv/5z/jRzy/csFvgoYZM1wE+jhFpWtFt5AyowepW0ZFvVo9iM5zU0NkZyeAugFyxKZ9Y9wBtlHDhsIcP4e7Q==
+
 file-entry-cache@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/file-entry-cache/-/file-entry-cache-8.0.0.tgz#7787bddcf1131bffb92636c69457bbc0edd6d81f"

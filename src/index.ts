@@ -8,36 +8,32 @@ import './components/content/file-uploader';
 import { contentContext, initialContentContext } from './contexts/content-context';
 import UpdateContentContextEvent from './events/update-content-context';
 
-@customElement('nekomata-editor')
+@customElement('nekomata-main')
 export class Nekomata extends LitElement {
   static override styles = nekomataStyle;
 
   @provide({ context: contentContext })
-  private contentCtx: ContentContext = initialContentContext;
+  contentCtx: ContentContext = initialContentContext;
 
   constructor() {
     super();
     
-    init().then((res) => {
-      console.log('AQUQIIII', res);
+    init().then(() => {
       const resp = add(1, 2);
       console.log(resp);
     });
 
     this.addEventListener(UpdateContentContextEvent.eventName, ((e: UpdateContentContextEvent) => {
-      this.contentCtx = {
-        ...this.contentCtx,
-        ...e.detail,
-        progress: e.detail.progress as Array<number>,
-        files: (e.detail?.files || this.contentCtx.files) as File[],
-      };
+      this.contentCtx = { ...e.detail };
     }) as EventListener);
   }
 
   override render() {
     return html`
       <main class="nekomata-main">
-        <file-uploader></file-uploader>
+        <div class="nekomata-main__container">	
+          <file-uploader></file-uploader>
+        </div>
       </main>
     `;
   }

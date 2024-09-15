@@ -1,17 +1,17 @@
 import { css } from "lit";
 import { textStyle } from "./text.style";
 
-export const fileUploaderStyle = [
+export const uploadedFileStyle = [
   textStyle,
   css`
     .uploaded-file {
       margin-top: 1rem;
       margin-bottom: 1rem;
-      width: calc(640px -2rem);
+      width: 40rem;
       display: flex;
       padding: 1rem;
       flex-direction: row;
-      background-color: rgb(23 24 32);
+      background-color: var(--bg-secondary);
       border-radius: 5px;
       align-items: center;
     }
@@ -30,7 +30,7 @@ export const fileUploaderStyle = [
 
     .uploaded-file__info {
       display: flex;
-      width: 500px;
+      width: 33.125rem;
       flex-direction: column;
       flex: 1;
       justify-content: center;
@@ -44,8 +44,8 @@ export const fileUploaderStyle = [
     }
 
     .uploaded-file__title {
-      font-size: 18px;
-      line-height: 22px;
+      font-size: 1.125rem;
+      line-height: 1.375rem;
       font-weight: 200;
       color: #fcfcfc;
       position: relative;
@@ -57,8 +57,8 @@ export const fileUploaderStyle = [
 
     .uploaded-file__size {
       margin: 0;
-      font-size: 16px;
-      line-height: 18px;
+      font-size: 1rem;
+      line-height: 1.125rem;
       font-weight: 200;
       color: rgb(109 111 131);
     }
@@ -66,14 +66,24 @@ export const fileUploaderStyle = [
     .uploaded-file__percentage-complete {
       margin: 0;
       text-align: right;
-      font-size: 16px;
-      line-height: 18px;
+      font-size: 1rem;
+      line-height: 1.125rem;
       font-weight: 200;
       color: rgb(109 111 131);
     }
 
     .uploaded-file__progress {
       margin-left: 0.5rem;
+    }
+
+    .uploaded_file__show-metadata {
+      background: none;
+      color: inherit;
+      border: none;
+      padding: 0;
+      font: inherit;
+      cursor: pointer;
+      outline: inherit;
     }
   `
 ];

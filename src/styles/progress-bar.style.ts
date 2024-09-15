@@ -5,13 +5,13 @@ export const progressBarStyle = css`
       margin-top: 0.5rem;
       background-color: rgb(37 40 51); 
       width: 100%; 
-      border-radius: 15px; 
-      height: 5px;
+      border-radius: 0.938rem; 
+      height: 0.313rem;
     } 
 
     .progress-bar__fill { 
       background-color: rgb(0 77 229); 
-      height: 5px;
-      border-radius: 15px; 
+      height: 0.313rem;
+      border-radius: 0.938rem; 
     } 
 `;

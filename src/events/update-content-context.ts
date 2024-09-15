@@ -1,18 +1,18 @@
-import { ContentContextUnreq } from "../@types/contexts";
+import { ContentContext } from "../@types/contexts";
 
-interface UpdateContentContextEventInit extends CustomEventInit<ContentContextUnreq> {
+interface UpdateContentContextEventInit extends CustomEventInit<ContentContext> {
   bubbles?: boolean;
   cancelable?: boolean;
   composed?: boolean;
-  detail: ContentContextUnreq
+  detail: ContentContext
 }
 
-class UpdateContentContextEvent extends CustomEvent<ContentContextUnreq> {
+class UpdateContentContextEvent extends CustomEvent<ContentContext> {
   protected init: UpdateContentContextEventInit;
 
   public static eventName = 'update-content-context';
 
-  constructor(detail: ContentContextUnreq) {
+  constructor(detail: ContentContext) {
     const init: UpdateContentContextEventInit = {
       bubbles: true,
       composed: true,

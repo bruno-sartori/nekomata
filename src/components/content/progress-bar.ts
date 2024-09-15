@@ -1,6 +1,7 @@
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { progressBarStyle } from '../../styles/progress-bar.style';
+
 @customElement('progress-bar')
 export class ProgressBar extends LitElement { 
   static override styles = progressBarStyle;

@@ -35,8 +35,6 @@ export class EditorVideo extends LitElement {
   }
 
   override updated(changedProperties: Map<string, unknown>) {
-    console.log(changedProperties);
-    
     if (changedProperties.has('playerCtx')) {
       const oldPlayerContext = changedProperties.get('playerCtx') as PlayerContext;
 
@@ -62,8 +60,6 @@ export class EditorVideo extends LitElement {
     if (changedProperties.has('timings') && this.shouldAddActiveSegments) {
       this.addActiveSegments();
     }
-
-    console.log(changedProperties)
   }
 
   override render() {
@@ -102,8 +98,7 @@ export class EditorVideo extends LitElement {
     }));
   }
 
-  private handleTogglePlayer(teste: string) { // teste new git hook
-    console.log(teste)
+  private handleTogglePlayer() { // teste new git hook
     if (this.video?.paused) {
       this.video.play();
     } else {

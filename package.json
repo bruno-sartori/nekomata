@@ -44,6 +44,7 @@
     "@ffmpeg/util": "^0.12.1",
     "@lit/context": "^1.1.2",
     "express": "^4.21.0",
+    "ffprobe-wasm": "^0.3.1",
     "lib": "file:./lib/target/pkg",
     "lit": "^3.2.0"
   },
