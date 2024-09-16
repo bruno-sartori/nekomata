@@ -1,11 +1,8 @@
-import { LitElement, html } from 'lit';
-import { customElement, property, state, query } from 'lit/decorators.js';
+import { LitElement, PropertyValues, html } from 'lit';
+import { customElement, property, state, query, queryAssignedElements } from 'lit/decorators.js';
 import { selectFieldStyle } from '../../styles/text-field.style';
 import '../../icons/icon-arrow-down';
-import '../../icons/icon-age-rating';
-import { RatingSystemClassInd } from '../../types';
-import { isUndefined } from '../../utils/isValidVariable';
-
+import { isValidString } from '../../utils/isValidVariable';
 
 @customElement('select-field')
 export class SelectField extends LitElement {
@@ -21,7 +18,7 @@ export class SelectField extends LitElement {
   disabled: boolean = false;
 
   @state()
-  private value?: { value: RatingSystemClassInd, label: string } = undefined;
+  value: string = '';
 
   @query('.select-field__input')
   input!: HTMLInputElement;
@@ -32,8 +29,42 @@ export class SelectField extends LitElement {
   @state()
   shouldShowPlaceholder: boolean = true;
 
+  @state()
+  private focusedElement: string = '';
+
+  protected override createRenderRoot() {
+    const root = super.createRenderRoot();
+    root.addEventListener('click', (e: Event) => {
+      this.focusedElement = (e.target as Element).localName;
+    });
+
+    return root;
+  }
+
+  @queryAssignedElements({slot: 'list', selector: '.option'})
+  optionList!: Array<HTMLElement>;
+
+  override connectedCallback() {
+    super.connectedCallback();
+    this.addEventListener('change', this.handleChangeEvent as EventListener);
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    this.removeEventListener('change', this.handleChangeEvent as EventListener);
+  }
+
+  /**
+   * Updates the state of the component to show the default selected value
+   */
+  protected override firstUpdated(_changedProperties: PropertyValues): void {
+    if (this.optionList.length > 0 && isValidString(this.value)) {
+      this.shouldShowPlaceholder = false;
+      this.requestUpdate();
+    }
+  }
+
   override render() {
-    console.log('-------', this.value)
     return html`
       <div class="select-field" id="${this.id}">
         <label for="${this.id}" class="select-field__label text">${this.name}</label>
@@ -42,16 +73,15 @@ export class SelectField extends LitElement {
             ${this.shouldShowPlaceholder ? html`
               <span class="select-field__placeholder text">${this.placeholder}</span>
             ` : ''}
-            ${!isUndefined(this.value?.value) ? html`
+            ${isValidString(this.value) ? html`
               <div class="select-field__value text">
-                <icon-age-rating .rating="${this.value?.value as RatingSystemClassInd}">${this.value?.value}</icon-age-rating> ${this.value?.label}
+                ${this.findItemWithValue()}
               </div>
             ` : ''}
             <input 
               id="${this.id}"
               .disabled="${this.disabled}"
               class="select-field__input text"
-              @input="${this.handleChange}"
               @blur="${this.handleBlur}"
               @focus="${() => this.active = true}"
             >
@@ -60,13 +90,7 @@ export class SelectField extends LitElement {
             </div>
           </div>
           <div class="select-field__list ${this.active ? 'active' : ''}">
-            <div class="select-field__option text" @click=${() => this.handleSelectOption({ value: 'ER', label: 'Especialmente recomendado para crianças' })}><icon-age-rating rating="ER">ER</icon-age-rating> Especialmente recomendado para crianças</div> 
-            <div class="select-field__option text" @click=${() => this.handleSelectOption({ value: 'L', label: 'Livre' })}><icon-age-rating rating="L">L</icon-age-rating> Livre</div> 
-            <div class="select-field__option text" @click=${() => this.handleSelectOption({ value: '10', label: '+10' })}><icon-age-rating rating="10">10</icon-age-rating> +10</div>
-            <div class="select-field__option text" @click=${() => this.handleSelectOption({ value: '12', label: '+12' })}><icon-age-rating rating="12">12</icon-age-rating> +12</div>
-            <div class="select-field__option text" @click=${() => this.handleSelectOption({ value: '14', label: '+14' })}><icon-age-rating rating="14">14</icon-age-rating> +14</div>
-            <div class="select-field__option text" @click=${() => this.handleSelectOption({ value: '16', label: '+16' })}><icon-age-rating rating="16">16</icon-age-rating> +16</div>
-            <div class="select-field__option text" @click=${() => this.handleSelectOption({ value: '18', label: '+18' })}><icon-age-rating rating="18">18</icon-age-rating> +18</div>
+            <slot name="list"></slot>
           </div>  
         </div>
       </div>
@@ -74,19 +98,42 @@ export class SelectField extends LitElement {
   }
 
   private handleBlur() {
-    if (isUndefined(this.value?.value)) {
+    if (!isValidString(this.value)) {
       this.shouldShowPlaceholder = true;
     }
-  } 
 
-  handleSelectOption(option: { value: RatingSystemClassInd, label: string }) {
-    this.value = option;
-    this.active = false;
-    this.shouldShowPlaceholder = false;
+    setTimeout(() => {
+      if (this.focusedElement !== 'select-option') {
+        this.active = false;
+      }
+    }, 200);
   }
 
-  handleChange(e: any) {
-    this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value: e.target.value } }));
+  private findItemWithValue() {
+    console.log('AQUIII', this.value, this.optionList);
+    const item = this.optionList.find((el: any) => el.value === this.value);
+    const nodes = [];
+
+    for (let i = 0, len = item?.childNodes.length || 0; i < len; i++) {
+      const node = item?.childNodes[i].cloneNode(true);
+      nodes.push(node);
+    }
+    return nodes;
+  }
+
+  private handleChangeEvent(event: CustomEvent) {
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const target = event.target as HTMLElement;
+    
+    if (this.optionList.includes(target)) {
+      const value = event.detail?.value;
+      this.active = false;
+      this.shouldShowPlaceholder = false;
+      this.value = value;
+      this.dispatchEvent(new CustomEvent('change', { bubbles: true, composed: true, detail: { value } }));
+    }
   }
 }
 

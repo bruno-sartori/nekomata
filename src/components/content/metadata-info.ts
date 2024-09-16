@@ -6,13 +6,18 @@ import { ContentMetadata } from '../../types';
 import { secondsToHHMMSS } from '../../utils/time';
 import { consume } from '@lit/context';
 import { contentContext, initialContentContext } from '../../contexts/content-context';
-import { ContentContext } from '../../@types/contexts';
+import { ContentContext, SettingsContext } from '../../@types/contexts';
 import { formatTitle } from '../../utils/metadata';
 import '../../icons/icon-close-circle';
 import '../form/text-field';
 import '../form/textarea-field';
 import '../form/keywords-field';
 import '../form/select-field';
+import '../form/select-option';
+import '../../icons/icon-age-rating';
+import '../form/button-primary';
+import { initialSettingsContext, settingsContext } from '../../contexts/settings-context';
+
 
 @customElement('metadata-info')
 export class MetadataInfoBar extends LitElement { 
@@ -27,6 +32,10 @@ export class MetadataInfoBar extends LitElement {
   @consume({ context: contentContext, subscribe: true })
   @state()
   contentCtx: ContentContext = initialContentContext;
+
+  @consume({ context: settingsContext, subscribe: true })
+  @state()
+  settingsCtx: SettingsContext = initialSettingsContext;
 
   @state()
   metadata?: ContentMetadata = undefined;
@@ -65,8 +74,39 @@ export class MetadataInfoBar extends LitElement {
                 name="Age Rating"
                 id="age-rating"
                 placeholder="Select an age rating"
-                @change=${(e: any) => console.log(e.target.value)}
-              ></select-field>
+                @change=${(e: any) => console.log('SELECT AGE RATING', e.detail.value)}
+              >
+                ${this.settingsCtx.ratingSystem === 'ClassInd' ? html`
+                  <select-option slot="list" class="option" value="ER">
+                    <icon-age-rating rating="ER">ER</icon-age-rating> Especialmente recomendado para crianças
+                  </select-option>
+                  <select-option slot="list" class="option" value="L">
+                    <icon-age-rating rating="L">L</icon-age-rating> Livre
+                  </select-option>
+                  <select-option slot="list" class="option" value="10">
+                    <icon-age-rating rating="10">10</icon-age-rating> +10
+                  </select-option>
+                  <select-option slot="list" class="option" value="12">
+                    <icon-age-rating rating="12">12</icon-age-rating> +12
+                  </select-option>
+                  <select-option slot="list" class="option" value="14">
+                    <icon-age-rating rating="14">14</icon-age-rating> +14
+                  </select-option>
+                  <select-option slot="list" class="option" value="16">
+                    <icon-age-rating rating="16">16</icon-age-rating> +16
+                  </select-option>
+                  <select-option slot="list" class="option" value="18">
+                    <icon-age-rating rating="18">18</icon-age-rating> +18
+                  </select-option> 
+                ` : html`
+                  <select-option slot="list" class="option" value="ER">
+                    <icon-age-rating rating="ER">ER</icon-age-rating> Especialmente recomendado para crianças
+                  </select-option>
+                  <select-option slot="list" class="option" value="L">
+                    <icon-age-rating rating="L">L</icon-age-rating> Livre
+                  </select-option>
+                `}
+              </select-field>
               <text-field 
                 name="Director" 
                 placeholder="Enter director name"
@@ -109,7 +149,7 @@ export class MetadataInfoBar extends LitElement {
                 @change=${(e: any) => console.log(e.target.value)}
               ></text-field>
 
-              <button type="button" @click=${this.handleSave}>Salvar</button>
+              <button-primary name="Salvar" @click=${this.handleSave}></button-primary>
             </form>
           </div>
         </div>

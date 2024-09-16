@@ -1,15 +1,16 @@
 {
   "name": "@bsartori/nekomata",
   "private": true,
-  "version": "2.0.3",
+  "version": "0.1.0",
   "description": "A web component based video editor that can be used by any framework",
-  "author": "Bruno Sartori <",
+  "author": "Bruno Sartori <brunosartori.dev@gmail.com>",
   "license": "MIT",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "type": "module",
   "keywords": [
     "video editor",
+    "content distributor",
     "nekomata",
     "typescript",
     "editor",

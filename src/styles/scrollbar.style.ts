@@ -13,11 +13,11 @@ export const scrollbarStyle = css`
   
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: rgb(2, 49, 150); 
+    background-color: rgb(2, 49, 150);
   }
 
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: rgb(0, 77, 229); 
+    background-color: rgb(0, 77, 229); 
   }
 `;

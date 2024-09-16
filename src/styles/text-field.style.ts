@@ -197,7 +197,9 @@ export const selectFieldStyle = [
     .select-field__container2 {
       width: -webkit-fill-available;
       min-height: 16px;
-      padding: 1rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+      height: 50px;
       border: 2px solid var(--text-tertiary);
       border-radius: 4px;
       font-size: 16px;
@@ -251,6 +253,20 @@ export const selectFieldStyle = [
       display: flex;
     }
 
+    .select-field__value {
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 1rem;
+    }
+  `
+];
+
+export const selectOptionStyle = [
+  textStyle,
+  css`
     .select-field__option {
       padding: 1rem;
       color: var(--text-primary);
@@ -263,18 +279,8 @@ export const selectFieldStyle = [
       gap: 1rem;
     }
 
-    .select-field__value {
-      color: var(--text-primary);
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 1rem;
-    }
-
     .select-field__option:hover {
       background-color: var(--icon-primary);
     }
   `
 ];
-

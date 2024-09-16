@@ -1,6 +1,11 @@
 import { Content, CurrentlyGrabbed, SeekableStyle } from "../types";
 import { DeepOptional } from "./deep-optional";
 
+export type SettingsContext = {
+  ratingSystem: 'ClassInd' | 'MPA';
+};
+export type SettingsContextUnreq = DeepOptional<SettingsContext>;
+
 export type ContentContext = {
   [key: string]: Content;
 };
