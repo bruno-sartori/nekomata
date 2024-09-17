@@ -2,6 +2,6 @@
 /dist/
 /test/
 custom-elements.json
-/lib/target/pkg/
+/lib/target/
 /dev/assets/
 .env
