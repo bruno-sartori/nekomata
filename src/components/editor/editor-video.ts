@@ -1,64 +1,64 @@
-import { LitElement, html } from 'lit';
-import { customElement, property, query, state } from 'lit/decorators.js';
+import { LitElement, PropertyValues, html } from 'lit';
+import { customElement, query, state } from 'lit/decorators.js';
 import { videoSidebarStyle } from '../../styles/editor-video.style';
-import VideoTimeUpdatedEvent from '../../events/video-time-update';
-import VideoLoadedEvent from '../../events/video-loaded';
-import VideoPauseEvent from '../../events/video-pause';
 import UpdateTimingsEvent from '../../events/update-timings';
 import { RangeTimings } from '../../types';
-import AddGrabbersEvent from '../../events/add-grabbers';
 import UpdateTimeInfoEvent from '../../events/update-time-info';
 import { secondsToHours, secondsToMinutes } from '../../utils/time';
-import FillTimelineEvent from '../../events/fill-timeline';
+import UpdateTimelineContextEvent from '../../events/update-timeline-context';
 import AppendSnapshotEvent from '../../events/append-snapshot';
-import UpdateSeekableStyleEvent from '../../events/update-seekable-style';
+import { consume } from '@lit/context';
+import { initialPlayerContext, playerContext } from '../../contexts/player-context';
+import { PlayerContext } from '../../@types/contexts';
+import UpdatePlayerContextEvent from '../../events/update-player-context';
+import UpdateSeekableContextEvent from '../../events/update-seekable-context';
+import UpdateGrabbersContextEvent from '../../events/update-grabbers-context';
 
 @customElement('editor-video')
 export class EditorVideo extends LitElement {
   static override styles = videoSidebarStyle;
 
-  @property({ type: Array })
-  timings: Array<RangeTimings> = []; 
-
-  @property({ type: Boolean })
-  videoPlaying = false; 
-  
   @state()
-  videoSeekTime = 0;
-
-  @state()
-  videoSrc = ''; 
+  private timings: Array<RangeTimings> = []; 
 
   @query('#video')
-  video: HTMLVideoElement | undefined;
+  private video: HTMLVideoElement | undefined;
 
-  constructor() {
-    super();
+  @consume({ context: playerContext, subscribe: true })
+  @state()
+  private playerCtx: PlayerContext = initialPlayerContext;
 
-    console.log(this.videoSeekTime)
+  private shouldAddActiveSegments = false;
 
-    this.addEventListener(VideoPauseEvent.eventName, () => {
-      this.video?.pause();
-    });
+  protected override firstUpdated(_changedProperties: PropertyValues): void {
+    this.dispatchEvent(new UpdatePlayerContextEvent({ video: this.video }));
   }
 
   override updated(changedProperties: Map<string, unknown>) {
-    console.log(`updated(). changedProps: `, changedProperties);
-    console.log(changedProperties.has("videoSrc"))
-    if (changedProperties.has("videoSrc")) {
-      this.video!.src = this.videoSrc;
-      this.video?.play();
-    }
-    if (changedProperties.has('videoPlaying')) {
-      if (this.videoPlaying) {
+    if (changedProperties.has('playerCtx')) {
+      const oldPlayerContext = changedProperties.get('playerCtx') as PlayerContext;
+
+      if (this.playerCtx?.src !== oldPlayerContext?.src) {
+        this.video!.src = this.playerCtx?.src;
         this.video?.play();
-      } else {
-        this.video?.pause();
       }
+
+      if (this.playerCtx?.playing !== oldPlayerContext?.playing) {
+        if (this.playerCtx.playing) {
+          this.video?.play();
+        } else {
+          this.video?.pause();
+        }
+      }
+
+      if (this.playerCtx?.seek !== oldPlayerContext?.seek) {
+        this.video!.currentTime = this.playerCtx.seek;
+      }
+      
     }
 
-    if (changedProperties.has('videoSeekTime')) {
-      this.video!.currentTime = this.videoSeekTime;
+    if (changedProperties.has('timings') && this.shouldAddActiveSegments) {
+      this.addActiveSegments();
     }
   }
 
@@ -68,12 +68,14 @@ export class EditorVideo extends LitElement {
         <video 
           id="video" 
           autoload="metadata"
+          muted
           class="video" 
           @click="${this.handleTogglePlayer}" 
           @timeupdate="${this.handleTimeUpdate}" 
           @loadeddata="${this.handleMediaLoaded}"
           @loadedmetadata="${this.handleLoadedMetadata}"
         ></video>
+        <div style="z-index: 9999; color: #fff; font-size: 30px;">${JSON.stringify(this.playerCtx)}</div>
       </div>
     `;
   }
@@ -89,10 +91,14 @@ export class EditorVideo extends LitElement {
     const timelineDuration = durationHours > 1 ? durationHours : durationMinutes;
     const timelineMetric = durationHours > 1 ? 'hours' : 'minutes';
 
-    this.dispatchEvent(new FillTimelineEvent({ bubbles: true, composed: true, detail: { duration: timelineDuration, metric: timelineMetric }}));
+    this.dispatchEvent(new UpdateTimelineContextEvent({ 
+      duration: timelineDuration, 
+      metric: timelineMetric, 
+      fill: true 
+    }));
   }
 
-  private handleTogglePlayer() {
+  private handleTogglePlayer() { // teste new git hook
     if (this.video?.paused) {
       this.video.play();
     } else {
@@ -101,28 +107,31 @@ export class EditorVideo extends LitElement {
   }
 
   private handleTimeUpdate() {
-    const seek = this.video!.currentTime / this.video!.duration * 100;
-    this.dispatchEvent(new VideoTimeUpdatedEvent({ bubbles: true, composed: true, detail: { seek, currentTime: this.video!.currentTime, duration: this.video!.duration } }));
+    this.dispatchEvent(new UpdatePlayerContextEvent({ currentTime: this.video!.currentTime }));
   }
 
   private handleMediaLoaded() {
-    this.dispatchEvent(new VideoLoadedEvent({ bubbles: true, composed: true, detail: { duration: this.video!.duration } }));
-  }
-
-  private capture() {
-    const height = 90;
-    const width = Math.round((16 / 9) * height);
-  
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    canvas.getContext("2d")?.drawImage(this.video!, 0, 0, width, height);
-
-    this.dispatchEvent(new AppendSnapshotEvent({ bubbles: true, composed: true, detail: { snapshot: canvas }}));
+    this.dispatchEvent(new UpdatePlayerContextEvent({ loaded: true, duration: this.video!.duration }));
   }
 
   private createSnapshotList() {
-    this.video?.addEventListener('seeked', this.capture);
+    const capture = () => {
+      if (this.video) {
+        const height = 90;
+        const width = Math.round((16 / 9) * height);
+      
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d")?.drawImage(this.video, 0, 0, width, height);
+    
+        this.dispatchEvent(new AppendSnapshotEvent({ bubbles: true, composed: true, detail: { snapshot: canvas }}));
+      } else {
+        console.log('FAILED CAPTURE')
+      }
+    }
+
+    this.video?.addEventListener('seeked', capture);
   
     const updateTime = () => {
       let i = 1;
@@ -133,7 +142,7 @@ export class EditorVideo extends LitElement {
         if (i === 16) {
           clearInterval(interval);
         }
-      }, 500);
+      }, 70);
     };
   
     updateTime();
@@ -143,28 +152,36 @@ export class EditorVideo extends LitElement {
     let colors = ''
     let counter = 0;
     
-    colors += `, rgba(240, 240, 240, 0) 0%, rgba(240, 240, 240, 0) ${this.timings[0].start / this.video!.duration * 100}%`
-    for (let times of this.timings) {
-      if (counter > 0) {
-        colors += `, rgba(240, 240, 240, 0) ${this.timings[counter].end / this.video!.duration * 100}%, rgba(240, 240, 240, 0) ${times.start / this.video!.duration * 100}%`
+    console.log('ADD ACTIVE SEGMENTS', this.timings);
+
+    if (this.timings.length > 0) {
+      colors += `, rgba(240, 240, 240, 0) 0%, rgba(240, 240, 240, 0) ${this.timings?.[0]?.start / this.video!.duration * 100}%`
+      for (let times of this.timings) {
+        if (counter > 0) {
+          colors += `, rgba(240, 240, 240, 0) ${this.timings[counter].end / this.video!.duration * 100}%, rgba(240, 240, 240, 0) ${times.start / this.video!.duration * 100}%`
+        }
+        colors += `, #655dc2 ${times.start / this.video!.duration * 100}%, #655dc2 ${times.end / this.video!.duration * 100}%`
+        counter += 1
       }
-      colors += `, #655dc2 ${times.start / this.video!.duration * 100}%, #655dc2 ${times.end / this.video!.duration * 100}%`
-      counter += 1
+      colors += `, rgba(240, 240, 240, 0) ${this.timings?.[counter - 1]?.end / this.video!.duration * 100}%, rgba(240, 240, 240, 0) 100%`
+      
+      this.dispatchEvent(new UpdateSeekableContextEvent({ style: { backgroundImage: `linear-gradient(to right${colors})` }}));
     }
-    colors += `, rgba(240, 240, 240, 0) ${this.timings[counter - 1].end / this.video!.duration * 100}%, rgba(240, 240, 240, 0) 100%`
-    
-    this.dispatchEvent(new UpdateSeekableStyleEvent({ bubbles: true, composed: true, detail: { style: { backgroundImage: `linear-gradient(to right${colors})` }}}));
   }
 
   private handleLoadedMetadata() {
+    console.log('handleLoadedMetadata', 'init');
+    console.log('handleLoadedMetadata - timings', this.timings);
+
+    this.shouldAddActiveSegments = true;
+
     if (this.timings.length === 0) {
       this.dispatchEvent(new UpdateTimingsEvent({ bubbles: true, composed: true, detail: { timings: [{ start: 0, end: 120 }] } }));
-      this.dispatchEvent(new AddGrabbersEvent({ bubbles: true, composed: true }));
+      this.dispatchEvent(new UpdateGrabbersContextEvent({ visible: true }));
     }
 
     this.fillVideoInfo();
     this.createSnapshotList();
-    this.addActiveSegments();
   }
 }
 

@@ -1,10 +1,4 @@
-/**
- * @license
- * Copyright 2021 Google LLC
- * SPDX-License-Identifier: BSD-3-Clause
- */
-
-import {MyElement} from '../src/index.js';
+import { MyElement } from '../src/index.js';
 
 import {fixture, assert} from '@open-wc/testing';
 import {html} from 'lit/static-html.js';

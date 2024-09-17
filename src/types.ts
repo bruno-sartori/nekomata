@@ -1,3 +1,5 @@
+import { FileInfo } from "ffprobe-wasm";
+import { DeepOptional } from "./@types/deep-optional";
 
 export interface ITestChild {
   alsoNotRequired?: string;
@@ -40,3 +42,53 @@ export type CurrentlyGrabbed = {
   index: number;
   type: string;
 };
+
+export type SeekableStyle = {
+  backgroundImage?: string;
+};
+
+export type Progress = {
+  width?: string;
+  left?: string;
+};
+
+export type ContentSeries = {
+  seriesTitle: string;
+  seasonNumber: number;
+  episodeNumber: number;
+}
+
+export type ContentMetadata = {
+  title: string;
+  description: string;
+  director: string;
+  cast: string[];
+  keywords: string[];
+  genres: string[];
+  ageRating: RatingSystemClassInd | RatingSystemMPA;
+  uploadDate: Date;
+  contentType: 'MOVIE' | 'SERIES';
+  series?: ContentSeries;
+  fileInfo: DeepOptional<FileInfo>;
+};
+
+export type FileContentType = {
+  contentType: 'MOVIE' | 'SERIES';
+  series?: ContentSeries;
+}
+
+export type Content = {
+  file: File;
+  progress: number;
+  metadata: ContentMetadata;
+};
+
+export type RatingSystemClassInd =  'ER' | 'L' | '10' | '12' | '14' | '16' | '18';
+export type RatingSystemMPA = 'G' | 'PG' | 'PG-13' | 'R' | 'NC-17';
+
+declare global {
+  interface Window { 
+    FFmpegUtil: any;
+    FFmpegWASM: any; 
+  }
+}

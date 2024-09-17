@@ -7,10 +7,10 @@ export const videoUploaderStyle = [
     .video-uploader__title {
       display: flex;
       align-items: center;
-      margin-top: 24px;
-      margin-bottom: 12px;
-      font-size: 22px;
-      line-height: 24px;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.375rem;
+      line-height: 1.5rem;
       color: #90919c;
     }
 
@@ -19,11 +19,11 @@ export const videoUploaderStyle = [
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
-      line-height: 24px;
+      font-size: 1.375rem;
+      line-height: 1.5rem;
       color: #90919c;
-      height: 100px;
-      border-radius: 8px;
+      height: 6.25rem;
+      border-radius: 0.5rem;
     }
 
     .video-uploader__file {

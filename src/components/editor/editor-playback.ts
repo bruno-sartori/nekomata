@@ -1,33 +1,34 @@
 import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { editorPlaybackStyle } from '../../styles/editor-playback.style';
 import '../playback/playback-grabbers';
 import '../playback/playback-snapshots';
 import '../playback/playback-seekable';
 import '../playback/playback-progress';
-import { CurrentlyGrabbed, RangeTimings } from '../../types';
+import { Progress, RangeTimings } from '../../types';
 
 @customElement('editor-playback')
 export class EditorPlayback extends LitElement {
   static override styles = editorPlaybackStyle;
 
-  @property({ type: Array })
+  @state()
   timings: Array<RangeTimings> = [];
 
-  @property({ type: Object })
-  currentlyGrabbed?: CurrentlyGrabbed;
+  @state()
+  progress: Progress = {};
 
-  constructor() {
-    super();
-  }
+  @state()
+  snapshots: Array<HTMLCanvasElement> = [];
 
   override render() {
     return html`
       <div class="playback" id="playback">
-        <playback-grabbers .timings=${this.timings} .currentlyGrabbed=${this.currentlyGrabbed}></playback-grabbers>
-        <playback-snapshots></playback-snapshots>
-        <playback-seekable .timings=${this.timings}></playback-seekable>
-        <playback-progress></playback-progress>
+        <playback-grabbers .timings=${this.timings}></playback-grabbers>
+        <playback-snapshots .snapshots=${this.snapshots}></playback-snapshots>
+        <playback-seekable 
+          .timings=${this.timings}
+        ></playback-seekable>
+        <playback-progress .progress=${this.progress}></playback-progress>
       </div>
     `;
   }

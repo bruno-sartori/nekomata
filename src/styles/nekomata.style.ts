@@ -1,41 +1,36 @@
 import { css } from "lit";
+import { scrollbarStyle } from "./scrollbar.style";
 
-export const nekomataStyle = css`
-  .nekomata-editor {
-    background-color: #1c1c26;
-    width: 100%;
-    height: 100vh;
-    display: grid;
-    grid-template-areas: "sidebar editor" "sidebar editor" "sidebar footer";
-    grid-template-columns: 15% 85%;
-  }
+export const nekomataStyle = [
+  scrollbarStyle, 
+  css`
+    :host {
+      --error: #e52e2e;
+      --primary: #004de5;
+      --secondary: #023196;
+      --text-primary: #e4e5e5;
+      --text-secondary: #cfd0d1;
+      --text-tertiary: #6d6f83;
+      --bg-primary: #12131a;
+      --bg-primary-2: rgba(18, 19, 26, 0.5);
+      --bg-secondary: #171820;
+      --bg-tertiary: #12131a;
+      --icon-primary: #3a3d4d;
+    }
 
-  .sidebar {
-    grid-area: sidebar;
-    background-color: rgba(0, 0, 0, 0);
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), linear-gradient(239.16deg, rgb(6, 32, 83) 10.39%, rgb(25, 30, 187) 26.87%, rgb(19, 145, 154) 48.31%, rgb(33, 133, 114) 64.98%, rgb(5, 26, 129) 92.5%);
-    padding: 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
+    .nekomata-main {
+      background-color: var(--bg-primary);
+      width: 100%;
+      height: 100vh;
+      overflow-y: scroll;
+      display: flex;
+    }
 
-  #footer {
-    grid-area: footer;
-    width: 100%;
-    height: 350px;
-    color: #FFF;
-    align-self: flex-end;
-    background-color: #17181d;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .editor {
-    grid-area: editor;
-    background-color: rgba(0, 0, 0, 0);
-    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), linear-gradient(239.16deg, rgb(6, 32, 83) 10.39%, rgb(25, 30, 187) 26.87%, rgb(19, 145, 154) 48.31%, rgb(33, 133, 114) 64.98%, rgb(5, 26, 129) 92.5%);
-    display: flex;
-    flex-direction: column;
-  }
-`
+    .nekomata-main__container {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+  `
+];

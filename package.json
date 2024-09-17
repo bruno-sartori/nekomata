@@ -1,21 +1,25 @@
 {
   "name": "@bsartori/nekomata",
   "private": true,
-  "version": "2.0.2",
+  "version": "0.3.0",
   "description": "A web component based video editor that can be used by any framework",
-  "author": "Bruno Sartori <",
+  "author": "Bruno Sartori <brunosartori.dev@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "@lit/context": "^1.1.2",
-    "lit": "^3.2.0",
-    "postcss-lit": "^1.1.1",
-    "stylelint": "^16.9.0",
-    "stylelint-config-standard": "^36.0.1"
-  },
   "main": "dist/index.js",
   "module": "dist/index.js",
   "type": "module",
+  "keywords": [
+    "video editor",
+    "content distributor",
+    "nekomata",
+    "typescript",
+    "editor",
+    "video"
+  ],
   "scripts": {
+    "extract-languages": "lit-localize extract",
+    "build-languages": "lit-localize build",
+    "prebuild": "yarn add file:./lib/target/pkg",
     "build": "tsc",
     "build:watch": "tsc --watch",
     "clean": "rimraf my-element.{d.ts,d.ts.map,js,js.map} test/my-element.{d.ts,d.ts.map,js,js.map} test/my-element_test.{d.ts,d.ts.map,js,js.map}",
@@ -35,19 +39,24 @@
     "checksize": "rollup -c ; cat dist/index.bundled.js | gzip -9 | wc -c ; rm dist/index.bundled.js",
     "prepare": "husky",
     "stylelint": "npx stylelint src/**/*.ts",
-    "postcss": "./node_modules/postcss/lib/postcss.js -r dist/**/*.js"
+    "postcss": "./node_modules/postcss/lib/postcss.js -r dist/**/*.js",
+    "download": "node ./scripts/download-assets.js"
   },
-  "keywords": [
-    "video editor",
-    "nekomata",
-    "typescript",
-    "editor",
-    "video"
-  ],
+  "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1",
+    "@lit/context": "^1.1.2",
+    "@lit/localize": "^0.12.2",
+    "express": "^4.21.0",
+    "ffprobe-wasm": "^0.3.1",
+    "lib": "file:./lib/target/pkg",
+    "lit": "^3.2.0"
+  },
   "devDependencies": {
     "@11ty/eleventy": "^1.0.1",
     "@11ty/eleventy-plugin-syntaxhighlight": "^4.0.0",
     "@custom-elements-manifest/analyzer": "^0.6.3",
+    "@lit/localize-tools": "^0.8.0",
     "@open-wc/testing": "^4.0.0",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-replace": "^5.0.7",
@@ -60,15 +69,19 @@
     "@web/test-runner-playwright": "^0.9.0",
     "@webcomponents/webcomponentsjs": "^2.8.0",
     "autoprefixer": "^10.4.20",
-    "eslint": "^8.15.0",
+    "eslint": "^9.10.0",
     "husky": "^9.1.5",
     "lit-analyzer": "^1.2.1",
     "postcss": "^8.4.45",
+    "postcss-lit": "^1.1.1",
     "prettier": "^2.6.2",
     "rimraf": "^3.0.2",
     "rollup": "^4.18.0",
     "rollup-plugin-summary": "^2.0.1",
+    "stylelint": "^16.9.0",
+    "stylelint-config-standard": "^36.0.1",
     "tailwindcss": "^3.4.10",
+    "tar": "^6.1.15",
     "typescript": "~5.5.0"
   },
   "lint-staged": {

@@ -1,12 +1,8 @@
 import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { editorToolbarStyle } from '../../styles/editor-toolbar.style';
-import { ChapterRange, CurrentlyGrabbed, RangeTimings } from '../../types';
+import { ChapterRange, RangeTimings } from '../../types';
 import ChapterAddedEvent from '../../events/chapter-added';
-import FilesAddedEvent from '../../events/files-added';
-import VideoLoadedEvent from '../../events/video-loaded';
-import './editor-sidebar';
-import './editor-timeline';
 import '../../icons/icon-plus';
 import '../../icons/icon-redo-arrow';
 import '../../icons/icon-save';
@@ -17,26 +13,19 @@ import '../../icons/icon-undo-arrow';
 export class EditorToolbar extends LitElement {
   static override styles = editorToolbarStyle;
   
-  @property({ type: Array })
+  @state()
   timings: Array<RangeTimings> = [];
 
-  @property({ type: Object })
-  currentlyGrabbed?: CurrentlyGrabbed;
+  @state()
+  files?: FileList;
 
   private ranges: Array<ChapterRange> = [];
   private selectedFile: any;
-  private videoDuration = 0;
 
-  constructor() {
-    super();
-
-    this.addEventListener(FilesAddedEvent.eventName, ((e: FilesAddedEvent) => {
-      this.selectedFile = e.detail.files;
-    }) as EventListener);
-
-    this.addEventListener(VideoLoadedEvent.eventName, ((e: VideoLoadedEvent) => {
-      this.videoDuration = e.detail.duration;
-    }) as EventListener);
+  override updated(changedProperties: Map<string, unknown>) {
+    if (changedProperties.has("files") && (this.files?.length ?? 0) > 0) {
+      this.selectedFile = this.files![0];
+    }
   }
 
   override render() {
@@ -64,7 +53,6 @@ export class EditorToolbar extends LitElement {
             <icon-trash></icon-trash>
           </button>
         </div>
-        <editor-timeline .timings=${this.timings} .currentlyGrabbed=${this.currentlyGrabbed}></editor-timeline>
       </div>
     `;
   }
@@ -72,14 +60,16 @@ export class EditorToolbar extends LitElement {
   private saveRange() {
     const title = 'chapters';
     const times = this.timings[0];
-    this.ranges.push({ title, range: { ...times } });
+    const chapterRange: ChapterRange = {
+      title,
+      range: {
+        ...times
+      }
+    };
 
-    const sizeRange = [
-      times.start / this.videoDuration * 100,
-      times.end / this.videoDuration * 100
-    ];
+    this.ranges.push(chapterRange);
 
-    this.dispatchEvent(new ChapterAddedEvent({ bubbles: true, composed: true, detail: { title, sizeRange } }));
+    this.dispatchEvent(new ChapterAddedEvent({ bubbles: true, composed: true, detail: chapterRange }));
   }
 
   private exportJson() {

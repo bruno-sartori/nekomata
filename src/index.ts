@@ -1,72 +1,60 @@
 import { LitElement, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import './components/editor/editor-sidebar';
-import './components/editor/editor-video';
-import './components/editor/editor-toolbar';
 import { nekomataStyle } from './styles/nekomata.style';
-import { CurrentlyGrabbed, RangeTimings } from './types';
-import UpdateCurrentlyGrabbedEvent from './events/update-currently-grabbed';
-import VideoPauseEvent from './events/video-pause';
-import VideoSeekEvent from './events/video-seek';
-import FilesAddedEvent from './events/files-added';
+import { provide } from '@lit/context';
+import { ContentContext, SettingsContext } from './@types/contexts';
+import init, { add } from 'lib';
+import { contentContext, initialContentContext } from './contexts/content-context';
+import UpdateContentContextEvent from './events/update-content-context';
+import './components/content/file-uploader';
+import './icons/icon-burguer';
+import './components/settings/settings-menu';
+import ShowSettingsMenuEvent from './events/show-settings-menu';
+import { initialSettingsContext, settingsContext } from './contexts/settings-context';
+import UpdateSettingsContextEvent from './events/update-settings-context';
 
-@customElement('nekomata-editor')
+@customElement('nekomata-main')
 export class Nekomata extends LitElement {
   static override styles = nekomataStyle;
 
-  private timings: Array<RangeTimings>  = [];
-  private currentlyGrabbed: CurrentlyGrabbed = { index: 0, type: 'none' };
+  @provide({ context: contentContext })
+  contentCtx: ContentContext = initialContentContext;
+
+  @provide({ context: settingsContext })
+  settingsCtx: SettingsContext = initialSettingsContext;
 
   @state()
-  videoPlaying = false;
-  
-  @state()
-  private videoSeekTime = 0;
-  
-  @state()
-  private videoSrc = '';
+  settingsVisible: boolean = false;
 
   constructor() {
     super();
     
-    this.addEventListener(UpdateCurrentlyGrabbedEvent.eventName, ((e: UpdateCurrentlyGrabbedEvent) => {
-      this.currentlyGrabbed = e.detail;
-    }) as EventListener);
-
-    this.addEventListener(VideoPauseEvent.eventName, () => {
-      this.videoPlaying = false;
+    init().then(() => {
+      const resp = add(1, 2);
+      console.log(resp);
     });
 
-    this.addEventListener(VideoSeekEvent.eventName, ((e: VideoSeekEvent) => {
-      this.videoSeekTime = e.detail.seekTime;
+    this.addEventListener(UpdateSettingsContextEvent.eventName, ((e: UpdateSettingsContextEvent) => {
+      this.settingsCtx = { ...e.detail };
     }) as EventListener);
 
-    this.addEventListener(FilesAddedEvent.eventName, ((e: FilesAddedEvent) => {
-      console.log('AQUIIII')
-      this.videoSrc = URL.createObjectURL(e.detail.files[0]);
-      this.videoPlaying = true;
+    this.addEventListener(UpdateContentContextEvent.eventName, ((e: UpdateContentContextEvent) => {
+      this.contentCtx = { ...e.detail };
     }) as EventListener);
 
-    console.log(this.videoSeekTime)
+    this.addEventListener(ShowSettingsMenuEvent.eventName, ((e: ShowSettingsMenuEvent) => {
+      this.settingsVisible = e.detail.visible;
+    }) as EventListener);
   }
 
   override render() {
     return html`
-      <main class="nekomata-editor">
-        <aside class="sidebar">
-          <editor-sidebar></editor-sidebar>
-        </aside>
-        <section class="editor">
-          <editor-video 
-            .timings=${this.timings} 
-            .videoPlaying=${this.videoPlaying} 
-            .videoSeekTime=${this.videoSeekTime} 
-            .videoSrc=${this.videoSrc}>
-          </editor-video>
-        </section>
-        <footer id="footer">
-          <editor-toolbar .timings=${this.timings} .currentlyGrabbed=${this.currentlyGrabbed}></editor-toolbar>
-        </footer>
+      <main class="nekomata-main">
+        <div class="nekomata-main__container">
+          <icon-burguer @click=${() => { this.settingsVisible = true }} style="position: absolute; left: 1rem; top: 1rem;"></icon-burguer>
+          <settings-menu .active=${this.settingsVisible}></settings-menu>
+          <file-uploader></file-uploader>
+        </div>
       </main>
     `;
   }
@@ -74,6 +62,6 @@ export class Nekomata extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'nekomata-editor': Nekomata;
+    'nekomata-main': Nekomata;
   }
 }

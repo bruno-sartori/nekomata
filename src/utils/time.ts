@@ -1,26 +1,3 @@
-export const logger = {
-  info: (label: string, message: string) => console.log(
-    `%c ${label} %c ${message}`,
-    `background-color: blue; color: #FFFFFF`,
-    `background-color: inherit; color: inherit`
-  ),
-  success: (label: string, message: string) => console.log(
-    `%c ${label} %c ${message}`,
-    `background-color: green; color: #FFFFFF`,
-    `background-color: inherit; color: inherit`
-  ),
-  warn: (label: string, message: string) => console.warn(
-    `%c ${label} %c ${message}`,
-    `background-color: orange; color: #FFFFFF`,
-    `background-color: inherit; color: inherit`
-  ),
-  error: (label: string, message: string) => console.error(
-    `%c ${label} %c ${message}`,
-    `background-color: red; color: #FFFFFF`,
-    `background-color: inherit; color: inherit`
-  )
-};
-
 export const secondsToHours = (seconds: number) => seconds / 3600;
 export const secondsToMinutes = (seconds: number) => seconds / 60;
 
@@ -81,3 +58,19 @@ export const getTimeString = (timeNumber: number, metric: 'hours' | 'minutes') =
       return floatToMMSS(timeNumber);
   }
 };
+
+
+export function secondsToHHMMSS(seconds: number) {
+  // Calcula as horas, minutos e segundos
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  
+  // Formata cada parte para ter dois dígitos
+  const hoursStr = String(hours).padStart(2, '0');
+  const minutesStr = String(minutes).padStart(2, '0');
+  const secsStr = String(secs).padStart(2, '0');
+  
+  // Retorna a string no formato HH:MM:SS
+  return `${hoursStr}:${minutesStr}:${secsStr}`;
+}
