@@ -1,1 +1,0 @@
-/home/bruno/Projects/nekomata/lib/target/debug/liblib.so: /home/bruno/Projects/nekomata/lib/src/lib.rs /home/bruno/Projects/nekomata/lib/src/services/mod.rs /home/bruno/Projects/nekomata/lib/src/services/transcode_x264.rs
