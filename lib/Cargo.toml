@@ -2,11 +2,12 @@
 name = "lib"
 version = "0.1.0"
 edition = "2021"
+repository = "https://github.com/bruno-sartori/nekomata"
+license = "MIT"
+description = "Nekomata's Rust WASM functions"
 
 [dependencies]
 wasm-bindgen = "0.2.93"
-actix-web = "4.0"
-actix-files = "0.5"
 
 [lib]
 crate-type = ["cdylib"]
