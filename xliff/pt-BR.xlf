@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="pt-BR" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="s9d8b8aa2b404c2c8">
+  <source>Settings</source>
+  <target>Configurações</target>
+</trans-unit>
+<trans-unit id="s6c0e3798cabb2a63">
+  <source>Content Metadata</source>
+  <target>Metadados do conteúdo</target>
+</trans-unit>
+<trans-unit id="sbfb1257ab2bb0d6c">
+  <source>Add cast, author, number of series and episodes and more.</source>
+  <target>Adicione elenco, autor, número de séries e episódios e muito mais.</target>
+</trans-unit>
+<trans-unit id="s99f110d27e30b289">
+  <source>Title</source>
+  <target>Título</target>
+</trans-unit>
+<trans-unit id="s60688a06d8a0195f">
+  <source>Enter title</source>
+  <target>Insira o título</target>
+</trans-unit>
+<trans-unit id="s63d894b1ddb06289">
+  <source>Description</source>
+  <target>Descrição</target>
+</trans-unit>
+<trans-unit id="sfb3efd524ea88238">
+  <source>Enter a description</source>
+  <target>Insira uma descrição</target>
+</trans-unit>
+<trans-unit id="s64e200f115cb52b1">
+  <source>Age Rating</source>
+  <target>Classificação Indicativa</target>
+</trans-unit>
+<trans-unit id="s82365c4276e816c8">
+  <source>Select an age rating</source>
+  <target>Selecione uma classificação indicativa</target>
+</trans-unit>
+<trans-unit id="s703162e34e37cca3">
+  <source>Especialmente recomendado para crianças</source>
+  <target>Especialmente recomendado para crianças</target>
+</trans-unit>
+<trans-unit id="sbcae0eb56c7e70d9">
+  <source>Livre</source>
+  <target>Livre</target>
+</trans-unit>
+<trans-unit id="s95d7ec72b3229ba1">
+  <source>Director</source>
+  <target>Diretor</target>
+</trans-unit>
+<trans-unit id="saf2ed8398d091032">
+  <source>Enter director name</source>
+  <target>Insira o nome do diretor</target>
+</trans-unit>
+<trans-unit id="sdfeb719ce9e80a2e">
+  <source>Cast</source>
+  <target>Elenco</target>
+</trans-unit>
+<trans-unit id="s35720fc3ecac04ee">
+  <source>Enter cast name separated by comma</source>
+  <target>Insira o nome do elenco separado por vírgula</target>
+</trans-unit>
+<trans-unit id="sef73fe18e351eb35">
+  <source>Keywords</source>
+  <target>Palavras-chave</target>
+</trans-unit>
+<trans-unit id="sc0f142afa697c16b">
+  <source>Enter keywords separated by space</source>
+  <target>Insira palavras-chave separadas por espaço</target>
+</trans-unit>
+<trans-unit id="s33b167859a445149">
+  <source>Genres</source>
+  <target>Generos</target>
+</trans-unit>
+<trans-unit id="sd34f7b3d281624b3">
+  <source>Enter genres separated by space</source>
+  <target>Insira gêneros separados por espaço</target>
+</trans-unit>
+<trans-unit id="s92921878e886e36d">
+  <source>Duration</source>
+  <target>Duração</target>
+</trans-unit>
+<trans-unit id="sab2376db5d9870b8">
+  <source>Enter a duration in seconds</source>
+  <target>Insira uma duração em segundos</target>
+</trans-unit>
+<trans-unit id="s33f85f24c0f5f008">
+  <source>Save</source>
+  <target>Salvar</target>
+</trans-unit>
+<trans-unit id="s98ca282a5c48dd63">
+  <source>Upload files</source>
+  <target>Carregar arquivos</target>
+</trans-unit>
+<trans-unit id="s783a3879a7ee07e9">
+  <source>Add your documents here. You can add up to 10 files.</source>
+  <target>Adicione seus documentos aqui. Você pode adicionar até 10 arquivos.</target>
+</trans-unit>
+<trans-unit id="s5affb3f816c78c18">
+  <source>Drag &amp; drop files here or choose files</source>
+  <target>Arraste e solte arquivos aqui ou escolha arquivos</target>
+</trans-unit>
+<trans-unit id="s3338302adb135b2c">
+  <source>1 GB max file size</source>
+  <target>Tamanho máximo do arquivo de 1 GB</target>
+</trans-unit>
+<trans-unit id="sb64e01cf942aff3a">
+  <source>Change language, rating systems, etc.</source>
+  <target>Alterar idioma, sistemas de classificação, etc.</target>
+</trans-unit>
+<trans-unit id="sef9a8e2df68539d8">
+  <source>Classificação Indicativa (Brasil)</source>
+  <target>Classificação Indicativa (Brasil)</target>
+</trans-unit>
+<trans-unit id="s3f95744d678c1a32">
+  <source>Motion Picture Association film rating system</source>
+  <target>Sistema de classificação de filmes da Motion Picture Association</target>
+</trans-unit>
+<trans-unit id="s084bce08d3b56b6e">
+  <source>Uploaded Files</source>
+  <target>Arquivos carregados</target>
+</trans-unit>
+</body>
+</file>
+</xliff>

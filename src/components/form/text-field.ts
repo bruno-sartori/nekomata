@@ -19,7 +19,7 @@ export class TextField extends LitElement {
   value: string = '';
 
   @property({ type: String })
-  type: 'text' | 'password' | 'email' | 'time' = 'text';
+  type: 'text' | 'password' | 'email' | 'time' | 'number' = 'text';
 
   @property({ type: String })
   step: '1' | '2' = '1';

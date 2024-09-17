@@ -4,3 +4,4 @@
 custom-elements.json
 /lib/target/pkg/
 /dev/assets/
+.env

@@ -4,7 +4,7 @@ interface UpdateSettingsContextEventInit extends CustomEventInit<SettingsContext
   bubbles?: boolean;
   cancelable?: boolean;
   composed?: boolean;
-  detail: SettingsContext
+  detail: SettingsContext;
 }
 
 class UpdateSettingsContextEvent extends CustomEvent<SettingsContext> {

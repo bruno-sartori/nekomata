@@ -3,14 +3,17 @@ import { customElement, state } from 'lit/decorators.js';
 import { fileUploaderStyle } from '../../styles/file-uploader.style';
 import { consume } from '@lit/context';
 import { contentContext, initialContentContext } from '../../contexts/content-context';
-import { ContentContext } from '../../@types/contexts';
+import { ContentContext, SettingsContext } from '../../@types/contexts';
 import UpdateContentContextEvent from '../../events/update-content-context';
 import ShowMetadataEvent from '../../events/show-metadata';
 import fileUploadWorkerBlob from '../../workers/file-upload-worker';
 import './uploaded-file';
 import './metadata-info';
 import { Content } from '../../types';
+import { initialSettingsContext, settingsContext } from '../../contexts/settings-context';
+import { localized, msg } from '@lit/localize';
 
+@localized()
 @customElement('file-uploader')
 export class FileUploader extends LitElement {
   static override styles = fileUploaderStyle;
@@ -18,6 +21,10 @@ export class FileUploader extends LitElement {
   @consume({ context: contentContext, subscribe: true })
   @state()
   private contentCtx: ContentContext = initialContentContext;
+
+  @consume({ context: settingsContext, subscribe: true })
+  @state()
+  private settingsCtx: SettingsContext = initialSettingsContext;
 
   @state()
   metadataIdx: number = -1;
@@ -33,8 +40,8 @@ export class FileUploader extends LitElement {
   override render() {
     return html`
       <div class="file-uploader">
-        <h1 class="file-uploader__title text">Upload files</h1>
-        <p class="file-uploader__description text">Add your documents here. You can add up to 10 files.</p>
+        <h1 class="file-uploader__title text">${msg('Upload files')}</h1>
+        <p class="file-uploader__description text">${msg('Add your documents here. You can add up to 10 files.')}</p>
         <div 
           class="file-uploader__picker" 
           @dragenter="${this.onDragEnter}" 
@@ -43,10 +50,10 @@ export class FileUploader extends LitElement {
           @click="${this.onClick}"
         >
           <input type="file" id="file" multiple class="file-uploader__file" accept="video/*" @change="${this.onSelectFile}" hidden>
-          <h2 class="file-uploader__picker__title text">Drag & drop files here or choose files</h2>
-          <p class="file-uploader__picker__description text">1 GB max file size</p>
+          <h2 class="file-uploader__picker__title text">${msg('Drag & drop files here or choose files')}</h2>
+          <p class="file-uploader__picker__description text">${msg('1 GB max file size')}</p>
         </div>
-        <h2 class="title-secondary text">Uploaded Files</h2>
+        <h2 class="title-secondary text">${msg('Uploaded Files')}</h2>
         <div class="file-uploader__uploaded-files">
           ${Object.keys(this.contentCtx).map((key, index) => html`
             <uploaded-file 
@@ -104,8 +111,10 @@ export class FileUploader extends LitElement {
             cast: [],
             keywords: [],
             genres: [],
+            ageRating: this.settingsCtx.ratingSystem === 'ClassInd' ? 'L' : 'G',
             uploadDate: new Date(),
             fileInfo: {},
+            contentType: 'MOVIE',
           },
         };
 
@@ -136,8 +145,10 @@ export class FileUploader extends LitElement {
             cast: [],
             keywords: [],
             genres: [],
+            ageRating: this.settingsCtx.ratingSystem === 'ClassInd' ? 'L' : 'G',
             uploadDate: new Date(),
             fileInfo: {},
+            contentType: 'MOVIE',
           },
         };
         acc[index] = content;

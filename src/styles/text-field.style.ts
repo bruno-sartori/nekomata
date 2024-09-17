@@ -1,5 +1,6 @@
 import { css } from "lit";
 import { textStyle } from "./text.style";
+import { scrollbarStyle } from "./scrollbar.style";
 
 export const textFieldStyle = [
   textStyle,
@@ -44,6 +45,7 @@ export const textFieldStyle = [
 ];
 
 export const textareaFieldStyle = [
+  scrollbarStyle,
   textStyle,
   css`
     .textarea-field {

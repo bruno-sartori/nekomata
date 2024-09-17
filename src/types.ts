@@ -52,6 +52,12 @@ export type Progress = {
   left?: string;
 };
 
+export type ContentSeries = {
+  seriesTitle: string;
+  seasonNumber: number;
+  episodeNumber: number;
+}
+
 export type ContentMetadata = {
   title: string;
   description: string;
@@ -59,9 +65,17 @@ export type ContentMetadata = {
   cast: string[];
   keywords: string[];
   genres: string[];
+  ageRating: RatingSystemClassInd | RatingSystemMPA;
   uploadDate: Date;
+  contentType: 'MOVIE' | 'SERIES';
+  series?: ContentSeries;
   fileInfo: DeepOptional<FileInfo>;
 };
+
+export type FileContentType = {
+  contentType: 'MOVIE' | 'SERIES';
+  series?: ContentSeries;
+}
 
 export type Content = {
   file: File;
@@ -70,7 +84,7 @@ export type Content = {
 };
 
 export type RatingSystemClassInd =  'ER' | 'L' | '10' | '12' | '14' | '16' | '18';
-export type RatingSystemMPAA = 'G' | '10' | '12' | '18';
+export type RatingSystemMPA = 'G' | 'PG' | 'PG-13' | 'R' | 'NC-17';
 
 declare global {
   interface Window { 

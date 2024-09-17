@@ -12,6 +12,9 @@ export class TextareaField extends LitElement {
   @property({ type: String })
   placeholder: string = '';
 
+  @property({ type: Number })
+  maxlength: number = 150;
+
   @property({ type: String })
   value: string = '';
 
@@ -31,7 +34,8 @@ export class TextareaField extends LitElement {
       <div class="textarea-field" id="${this.id}">
         <label for="${this.id}" class="textarea-field__label text">${this.name}</label>
         <textarea 
-          id="${this.id}" 
+          id="${this.id}"
+          maxlength="${this.maxlength}"
           class="textarea-field__input text" 
           placeholder="${this.placeholder}" 
           @change="${{ handleEvent: (e: any) => this.change(e)}}" 

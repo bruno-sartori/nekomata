@@ -3,6 +3,7 @@ import { DeepOptional } from "./deep-optional";
 
 export type SettingsContext = {
   ratingSystem: 'ClassInd' | 'MPA';
+  language: 'pt-BR' | 'en' | 'es-ES';
 };
 export type SettingsContextUnreq = DeepOptional<SettingsContext>;
 

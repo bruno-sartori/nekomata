@@ -3,12 +3,12 @@
 
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { iconAgeRatingStyle } from '../styles/icon-age-rating.style';
+import { iconAgeRatingClassIndStyle } from '../styles/icon-age-rating.style';
 import { RatingSystemClassInd } from '../types';
 
-@customElement('icon-age-rating')
-export class IconAgeRating extends LitElement {
-  static override styles = iconAgeRatingStyle;
+@customElement('icon-age-rating-classind')
+export class IconAgeRatingClassInd extends LitElement {
+  static override styles = iconAgeRatingClassIndStyle;
 
   @property({ type: String })
   rating: RatingSystemClassInd = 'L';
@@ -16,7 +16,7 @@ export class IconAgeRating extends LitElement {
   override render() {
     console.log(this.rating)
 
-    const className = `icon-age-rating age-${this.rating} text`;
+    const className = `icon-age-rating-classind age-${this.rating} text`;
 
     return html`
       <div class="${className}">
@@ -28,12 +28,6 @@ export class IconAgeRating extends LitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'icon-age-rating': IconAgeRating;
+    'icon-age-rating-classind': IconAgeRatingClassInd;
   }
 }
-
-
-
-
-
-

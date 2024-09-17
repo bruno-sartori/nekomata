@@ -5,4 +5,5 @@ export const settingsContext = createContext<SettingsContext>('settings-context'
 
 export const initialSettingsContext: SettingsContext = {
   ratingSystem: 'ClassInd',
+  language: 'en',
 };

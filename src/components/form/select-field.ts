@@ -64,6 +64,20 @@ export class SelectField extends LitElement {
     }
   }
 
+  protected override updated(_changedProperties: PropertyValues): void {
+    if (_changedProperties.has('value')) {
+      const oldValue = _changedProperties.get('value') as string;
+
+      if (isValidString(oldValue) && !isValidString(this.value)) {
+        this.shouldShowPlaceholder = true;
+        this.requestUpdate();
+      } else if (!isValidString(oldValue) && isValidString(this.value)) {
+        this.shouldShowPlaceholder = false;
+        this.requestUpdate();
+      }
+    }
+  }
+
   override render() {
     return html`
       <div class="select-field" id="${this.id}">
@@ -110,7 +124,6 @@ export class SelectField extends LitElement {
   }
 
   private findItemWithValue() {
-    console.log('AQUIII', this.value, this.optionList);
     const item = this.optionList.find((el: any) => el.value === this.value);
     const nodes = [];
 
