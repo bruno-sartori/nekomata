@@ -1,5 +1,6 @@
 import { FileInfo } from "ffprobe-wasm";
 import { DeepOptional } from "./@types/deep-optional";
+import { ErrorCode } from "./@types/errors";
 
 export interface ITestChild {
   alsoNotRequired?: string;
@@ -80,6 +81,8 @@ export type FileContentType = {
 export type Content = {
   file: File;
   progress: number;
+  status: 'success' | 'error' | 'pending';
+  error?: ErrorCode;
   metadata: ContentMetadata;
 };
 

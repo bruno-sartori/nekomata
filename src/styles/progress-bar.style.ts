@@ -10,8 +10,12 @@ export const progressBarStyle = css`
     } 
 
     .progress-bar__fill { 
-      background-color: rgb(0 77 229); 
+      background-color: var(--primary); 
       height: 0.313rem;
       border-radius: 0.938rem; 
-    } 
+    }
+
+    .error {
+      background-color: var(--error);
+    }
 `;

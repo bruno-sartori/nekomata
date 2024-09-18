@@ -9,10 +9,14 @@ export class ProgressBar extends LitElement {
   @state()
   progress: number = 0;
 
+  @state()
+  status: 'success' | 'error' | 'pending' = 'pending';
+
   override render() {
+    
     return html`
       <div class="progress-bar">
-        <div class="progress-bar__fill" style="width: ${this.progress.toString()}%"></div>
+        <div class="progress-bar__fill ${this.status === 'error' ? 'error' : ''}" style="width: ${this.progress.toString()}%;"></div>
       </div>
     `;
   }

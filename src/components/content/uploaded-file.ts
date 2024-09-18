@@ -4,14 +4,16 @@ import { uploadedFileStyle } from '../../styles/uploaded-file.style';
 import ShowMetadataEvent from '../../events/show-metadata';
 import { FFprobeWorker, FileInfo } from 'ffprobe-wasm';
 import { Content } from '../../types';
-import '../../icons/icon-play';
-import '../../icons/icon-close-circle';
-import '../../icons/icon-exclamation';
-import '../../components/content/progress-bar';
 import UpdateContentContextEvent from '../../events/update-content-context';
 import { contentContext, initialContentContext } from '../../contexts/content-context';
 import { ContentContext } from '../../@types/contexts';
 import { consume } from '@lit/context';
+import { ERROR_CODE } from '../../@types/errors';
+import '../../icons/icon-play';
+import '../../icons/icon-close-circle';
+import '../../icons/icon-exclamation';
+import '../../components/content/progress-bar';
+import '../../icons/icon-loading';
 
 @customElement('uploaded-file')
 export class UploadedFile extends LitElement {
@@ -50,7 +52,12 @@ export class UploadedFile extends LitElement {
     const file = this.content?.file;
     const size = (file!.size.toString()?.length < 7) ? `${Math.round(+file!.size/1024).toFixed(2)}kb` : `${(Math.round(+file!.size/1024)/1000).toFixed(2)}MB`
     const progress = this.content?.progress || 0;
+    const status = this.content?.status || 'pending';
+    const error = this.content?.error;
     const uploadedDate = this.content?.metadata.uploadDate;
+
+    console.log('ERRORR AQUII')
+    console.log(error);
 
     return html`
       <div style="display: flex; flex-direction: row; align-items: center;">
@@ -64,12 +71,25 @@ export class UploadedFile extends LitElement {
                 <h1 class="uploaded-file__title text">${file?.name}</h1>
                 <div class="uploaded-file__meta">
                   <p class="uploaded-file__size text">${size}</p>
-                  ${progress < 100 ? html`<p class="uploaded-file__percentage-complete text">${progress.toFixed(2).toString()}%${` • ${this.getTimeRemaining(uploadedDate!, progress)}`}</p>` : ''}
+                  ${progress < 100 ?
+                    status === 'error' && ERROR_CODE[error!] === ERROR_CODE.NO_INTERNET_CONNECTION ? 
+                      html`
+                        <div class="uploaded-file__status-error text">
+                          <icon-loading></icon-loading> Awaiting connection...
+                        </div>
+                      ` 
+                    : 
+                      html`
+                        <p class="uploaded-file__percentage-complete text">
+                          ${progress.toFixed(2).toString()}% • ${this.getTimeRemaining(uploadedDate!, progress)}
+                        </p>
+                      `
+                  : ''}
                 </div>
               </div>
             </div>
             ${progress < 100 ? html`<div class="uploaded-file__progress">
-              <progress-bar .progress=${progress}></progress-bar>
+              <progress-bar .progress=${progress} .status=${status}></progress-bar>
             </div>` : ''}
           </div>
           <div role="button" style="margin-left: auto; margin-right: 0.5rem;">
