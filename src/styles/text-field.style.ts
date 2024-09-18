@@ -12,6 +12,7 @@ export const textFieldStyle = [
     }
 
     .text-field__label {
+      text-align: left;
       font-weight: bold;
       margin-bottom: 8px;
       color: var(--text-secondary);
@@ -55,6 +56,7 @@ export const textareaFieldStyle = [
     }
 
     .textarea-field__label {
+      text-align: left;
       font-weight: bold;
       margin-bottom: 8px;
       color: var(--text-secondary);
@@ -93,6 +95,7 @@ export const keywordsFieldStyle = [
     }
 
     .keywords-field__label {
+      text-align: left;
       font-weight: bold;
       margin-bottom: 8px;
       color: var(--text-secondary);
@@ -173,6 +176,7 @@ export const selectFieldStyle = [
     }
 
     .select-field__label {
+      text-align: left;
       font-weight: bold;
       margin-bottom: 8px;
       color: var(--text-secondary);
