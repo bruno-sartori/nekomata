@@ -61,13 +61,13 @@ And that's it! the component will be rendered in your application. If you run in
 
 See the result:
 
-![Nekomata Example 1](./docs/examples/nekomata1.jpg)
+![Nekomata Example 1](https://raw.githubusercontent.com/bruno-sartori/nekomata/main/docs/examples/nekomata1.jpg)
 
-![Nekomata Example 2](./docs/examples/nekomata2.jpg)
+![Nekomata Example 2](https://raw.githubusercontent.com/bruno-sartori/nekomata/main/docs/examples/nekomata2.jpg)
 
-![Nekomata Example 3](./docs/examples/nekomata3.jpg)
+![Nekomata Example 3](https://raw.githubusercontent.com/bruno-sartori/nekomata/main/docs/examples/nekomata3.jpg)
 
-![Nekomata Example 4](./docs/examples/nekomata4.jpg)
+![Nekomata Example 4](https://raw.githubusercontent.com/bruno-sartori/nekomata/main/docs/examples/nekomata4.jpg)
 
 
 ## Generated Metadata
@@ -279,7 +279,7 @@ Would love Pull requests that build towards these objectives and even ideas for 
 
 * File Upload performance and robustness
  - [x] Spawn multiple web workers to handle file uploads
- - [ ] Multipart Upload and Resumable Uploads -> Split file in smaller chunks to send them separately. Managing upload failures and being able to re-send files who fails without having to send the entire file again.
+ - [x] Multipart Upload and Resumable Uploads -> Split file in smaller chunks to send them separately. Managing upload failures and being able to re-send files who fails without having to send the entire file again.
  - [ ] Dynamize chunk size based on network settings and throttle requests to avoid overcharging the server.
  - [ ] Integrity check
 * Metadata generation

@@ -72,6 +72,18 @@ export const uploadedFileStyle = [
       color: rgb(109 111 131);
     }
 
+    .uploaded-file__status-error {
+      display: flex;
+      flex-direction: row;
+      margin: 0;
+      text-align: right;
+      font-size: 1rem;
+      line-height: 1.125rem;
+      font-weight: 200;
+      color: rgb(109 111 131);
+      gap: 0.5rem;
+    }
+
     .uploaded-file__progress {
       margin-left: 0.5rem;
     }
@@ -85,5 +97,7 @@ export const uploadedFileStyle = [
       cursor: pointer;
       outline: inherit;
     }
+
+    
   `
 ];

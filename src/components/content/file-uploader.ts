@@ -6,7 +6,7 @@ import { contentContext, initialContentContext } from '../../contexts/content-co
 import { ContentContext, SettingsContext } from '../../@types/contexts';
 import UpdateContentContextEvent from '../../events/update-content-context';
 import ShowMetadataEvent from '../../events/show-metadata';
-import fileUploadWorkerBlob from '../../workers/file-upload-worker';
+import resumableFileUploadWorkerBlob from '../../workers/resumable-file-upload.worker';
 import './uploaded-file';
 import './metadata-info';
 import { Content } from '../../types';
@@ -104,6 +104,7 @@ export class FileUploader extends LitElement {
         const content: Content = {
           file: files[index],
           progress: 0,
+          status: 'pending',
           metadata: {
             title: '',
             description: '',
@@ -138,6 +139,7 @@ export class FileUploader extends LitElement {
         const content: Content = {
           file: files[index],
           progress: 0,
+          status: 'pending',
           metadata: {
             title: '',
             description: '',
@@ -168,24 +170,41 @@ export class FileUploader extends LitElement {
 
     const runWorker = (worker: Worker) => {
       worker.onmessage = (event) => {
-        if (event.data.type === 'done') {
-          if (index < totalWorkers) {
-            runWorker(worker);
-          } else {
-            if (--maxWorkers === 0) {
-              console.log((new Date).getTime() - start);
+        switch (event.data.type) {
+          case 'uploadStatus': {
+            console.log(event.data.status);
+            this.dispatchEvent(new UpdateContentContextEvent({ 
+              ...this.contentCtx, 
+              [event.data.index]: {
+                ...this.contentCtx[event.data.index],
+                progress: event.data.value,
+                status: 'pending'
+              }
+            }));
+          } break;
+          case 'done': {
+            if (index < totalWorkers) {
+              runWorker(worker);
+            } else {
+              if (--maxWorkers === 0) {
+                console.log((new Date).getTime() - start);
+              }
+    
+              worker.terminate();
             }
-  
-            worker.terminate();
-          }
-        } else {
-          this.dispatchEvent(new UpdateContentContextEvent({ 
-            ...this.contentCtx, 
-            [event.data.index]: {
-              ...this.contentCtx[event.data.index],
-              progress: event.data.value
-            }
-          }));
+          } break;
+          case 'error': {
+            console.log('AQUIII')
+            console.log('error', event.data.index, event.data.error);
+            this.dispatchEvent(new UpdateContentContextEvent({ 
+              ...this.contentCtx, 
+              [event.data.index]: {
+                ...this.contentCtx[event.data.index],
+                status: 'error',
+                error: event.data.error
+              }
+            }));
+          } break;
         }
       };
       
@@ -194,7 +213,7 @@ export class FileUploader extends LitElement {
     }
 
     for (var i = 0; i < maxWorkers && i < files.length; i++) {
-      runWorker(new Worker(fileUploadWorkerBlob));
+      runWorker(new Worker(resumableFileUploadWorkerBlob));
     }
   }
 }
