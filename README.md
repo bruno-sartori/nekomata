@@ -43,12 +43,10 @@ yarn dev
 
 ## Production Use
 
-On your HTML header, put the script tag:
+import Nekomata in your project:
 
-```html
-<head>
-  <script type="module" src="nekomata.js"></script>
-</head>
+```js
+import '@bsartori/nekomata';
 ```
 
 And on your body tag, put the Nekomata app component:
@@ -59,7 +57,9 @@ And on your body tag, put the Nekomata app component:
 </body>
 ```
 
-And that's it! See the result:
+And that's it! the component will be rendered in your application. If you run in some trouble see **Common Issues** section.
+
+See the result:
 
 ![Nekomata Example 1](./docs/examples/nekomata1.jpg)
 
@@ -247,6 +247,32 @@ And that's it! See the result:
   "Response": "True"
 }
 ```
+
+## Commom Issues
+
+Module not found: Error: Can't resolve './styles/nekomata.style' in '/home/User/Path/To/@bsartori/nekomata/dist'
+Did you mean 'nekomata.style.js'?
+
+You may need to add this to your `webpack.config.js` file
+```js
+{
+  ...
+  module: {
+    ...
+    rules: [
+      ...
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false
+        }
+      }
+    ]
+  }
+}
+
+```
+
 
 ## Roadmap 
 Would love Pull requests that build towards these objectives and even ideas for new objectives :3

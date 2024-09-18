@@ -47,6 +47,9 @@ export const metadataInfoStyle = [
     }
 
     .metadata-info__close {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
       background: none;
       color: inherit;
       border: none;
@@ -59,7 +62,7 @@ export const metadataInfoStyle = [
     .metadata-info__title {
       display: flex;
       align-items: center;
-      margin-top: 24px;
+      margin-top: 48px;
       margin-bottom: 12px;
       font-size: 22px;
       line-height: 24px;

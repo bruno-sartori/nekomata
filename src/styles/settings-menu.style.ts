@@ -64,7 +64,7 @@ export const settingsMenuStyle = [
     .settings-menu__title {
       display: flex;
       align-items: center;
-      margin-top: 24px;
+      margin-top: 48px;
       margin-bottom: 12px;
       font-size: 22px;
       line-height: 24px;
