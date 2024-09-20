@@ -280,6 +280,7 @@ Would love Pull requests that build towards these objectives and even ideas for 
 * File Upload performance and robustness
  - [x] Spawn multiple web workers to handle file uploads
  - [x] Multipart Upload and Resumable Uploads -> Split file in smaller chunks to send them separately. Managing upload failures and being able to re-send files who fails without having to send the entire file again.
+ - [ ] Resume uploads even if the application was closed
  - [ ] Dynamize chunk size based on network settings and throttle requests to avoid overcharging the server.
  - [ ] Integrity check
 * Metadata generation
