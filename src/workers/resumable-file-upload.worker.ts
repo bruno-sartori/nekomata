@@ -70,11 +70,13 @@ const worker = function () {
     let fileId: string = '';
     const fileName = file.name;
     const fileHash = await calculateChunkHash(file);
-    const chunkSize = megabytes(5);
+    const chunkSize = megabytes(3);
     const { hashes, chunks } = await prepareChunks(file, chunkSize);
     const totalChunks = chunks.length;
     const chunkProgress = 100 / totalChunks;
     let chunkNumber = 0;
+    const failedChunks: Set<number> = new Set();
+    const resentFailedChunksThatSucceed: Set<number> = new Set();
 
     if (!pending) {
       try {
@@ -100,54 +102,75 @@ const worker = function () {
       chunkNumber = pending.chunkNumber + 1;
     }
 
+    const sendChunk = async (chunkNumberToUpload: number) => {
+      const chunk = chunks[chunkNumberToUpload];
+      const chunkHash = await calculateChunkHash(chunk);
+      const formData = new FormData();
+      formData.append("file", chunk);
+      formData.append('fileId', fileId);
+      formData.append("chunkNumber", chunkNumberToUpload.toString());
+      formData.append("totalChunks", totalChunks.toString());
+      formData.append("originalname", fileName);
+      formData.append("chunkHash", chunkHash);
+      formData.append("size", chunk.size.toString());
+  
+      const url = "http://localhost:3000/upload/chunk";
+  
+      const response = await fetch(url, { 
+        method: "POST", 
+        body: formData, 
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.status !== 200) {
+        throw new Error('UPLOAD_ERROR');
+      }
+
+      const data = await response.json();
+      const status = `Chunk ${chunkNumberToUpload}/${totalChunks - 1} uploaded successfully`;
+      const progress = Number((chunkNumberToUpload + 1) * chunkProgress);
+      
+      self.postMessage({ type: 'uploadStatus', value: progress, status: { status, data }, index });
+    };
+
     const uploadNextChunk = async () => {
       if (navigator.onLine) {
-        if (chunkNumber < totalChunks) {
-          const chunk = chunks[chunkNumber];
-          const chunkHash = await calculateChunkHash(chunk); // hashes[chunkNumber];
-          const formData = new FormData();
-          formData.append("file", chunk);
-          formData.append('fileId', fileId);
-          formData.append("chunkNumber", chunkNumber.toString());
-          formData.append("totalChunks", totalChunks.toString());
-          formData.append("originalname", fileName);
-          formData.append("chunkHash", chunkHash);
-          formData.append("size", chunk.size.toString());
+        if (failedChunks.size > 0) {
+          // Se houver chunks falhados, tentar reenvia-los
+          self.postMessage({ type: 'retryingFailedChunks', failedChunks, index });
 
-          const url = "http://localhost:3000/upload/chunk";
-  
-          try {
-            const response = await fetch(url, { 
-              method: "POST", 
-              body: formData, 
-              headers: { Authorization: `Bearer ${token}` }
-            });
-
-            if (response.status !== 200) {
-              throw new Error('UPLOAD_ERROR');
+          for (const failedChunk of failedChunks) {
+            try {
+              await sendChunk(failedChunk);
+              resentFailedChunksThatSucceed.add(failedChunk);
+            } catch (error) {
+              self.postMessage({ type: 'error', index, error: `Failed to upload chunk ${failedChunk}` });
             }
-
-            const data = await response.json();
-            const status = `Chunk ${chunkNumber + 1}/${totalChunks} uploaded successfully`;
-            const progress = Number((chunkNumber + 1) * chunkProgress);
-            
-            self.postMessage({ type: 'uploadStatus', value: progress, status: { status, data }, index });
-            
-            chunkNumber++;
-
-            await uploadNextChunk();
-          } catch (error) {
-            if (!navigator.onLine) {
-              await uploadNextChunk();
-            }
-            self.postMessage({ type: 'error', index, error });
           }
+
+          for (const chunk of resentFailedChunksThatSucceed) {
+            failedChunks.delete(chunk);
+          }
+
+          await uploadNextChunk();
+        } else if (chunkNumber < totalChunks) {
+          try {
+            await sendChunk(chunkNumber);
+            chunkNumber++;
+          } catch (error) {
+            self.postMessage({ type: 'error', index, error: `Failed to upload chunk ${chunkNumber}` });
+            failedChunks.add(chunkNumber);    
+          }
+          
+          await uploadNextChunk();  // Chama recursivamente para o próximo chunk
+  
         } else {
+          // Quando todos os chunks forem enviados com sucesso
           self.postMessage({ type: 'done', index });
         }
       } else {
         self.postMessage({ type: 'error', index, error: 'NO_INTERNET_CONNECTION' });
-        setInterval(async () => {
+        setTimeout(async () => {
           if (navigator.onLine) {
             await uploadNextChunk();
           }

@@ -56,9 +56,6 @@ export class UploadedFile extends LitElement {
     const error = this.content?.error;
     const uploadedDate = this.content?.metadata.uploadDate;
 
-    console.log('ERRORR AQUII')
-    console.log(error);
-
     return html`
       <div style="display: flex; flex-direction: row; align-items: center;">
         <div class="uploaded-file">

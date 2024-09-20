@@ -216,8 +216,7 @@ export class FileUploader extends LitElement {
             }
           } break;
           case 'error': {
-            console.log('AQUIII')
-            console.log('error', event.data.index, event.data.error);
+            console.error('error', event.data.index, event.data.error);
             this.dispatchEvent(new UpdateContentContextEvent({ 
               ...this.contentCtx, 
               [event.data.index]: {
