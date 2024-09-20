@@ -29,7 +29,7 @@ const worker = function () {
     const totalChunks = Math.ceil(file.size / chunkSize);
     let chunkNumber = 0;
     let start = 0;
-    let end = 0;
+    let end = chunkSize;
 
     const generateNextHash = async () => {
       if (chunkNumber < totalChunks) {
@@ -71,12 +71,10 @@ const worker = function () {
     const fileName = file.name;
     const fileHash = await calculateChunkHash(file);
     const chunkSize = megabytes(5);
-    const totalChunks = Math.ceil(file.size / chunkSize);
+    const { hashes, chunks } = await prepareChunks(file, chunkSize);
+    const totalChunks = chunks.length;
     const chunkProgress = 100 / totalChunks;
     let chunkNumber = 0;
-    let start = 0;
-    let end = 0;
-    const { hashes, chunks } = await prepareChunks(file, chunkSize);
 
     if (!pending) {
       try {
@@ -86,7 +84,8 @@ const worker = function () {
             fileName,
             totalChunks,
             fileHash,
-            hashes
+            hashes,
+            size: file.size
           }), 
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }
         });
@@ -96,20 +95,16 @@ const worker = function () {
         self.postMessage({ type: 'error', index, error: error.message });
         throw new Error();
       }
-    }
-
-    if (pending) {
+    } else {
       fileId = pending.id;
       chunkNumber = pending.chunkNumber + 1;
-      start = chunkNumber * chunkSize;
-      end = start + chunkSize;
     }
 
     const uploadNextChunk = async () => {
       if (navigator.onLine) {
         if (chunkNumber < totalChunks) {
-          const chunk = file.slice(start, end);
-          const chunkHash = await calculateChunkHash(chunk);
+          const chunk = chunks[chunkNumber];
+          const chunkHash = await calculateChunkHash(chunk); // hashes[chunkNumber];
           const formData = new FormData();
           formData.append("file", chunk);
           formData.append('fileId', fileId);
@@ -117,6 +112,7 @@ const worker = function () {
           formData.append("totalChunks", totalChunks.toString());
           formData.append("originalname", fileName);
           formData.append("chunkHash", chunkHash);
+          formData.append("size", chunk.size.toString());
 
           const url = "http://localhost:3000/upload/chunk";
   
@@ -135,15 +131,9 @@ const worker = function () {
             const status = `Chunk ${chunkNumber + 1}/${totalChunks} uploaded successfully`;
             const progress = Number((chunkNumber + 1) * chunkProgress);
             
-            self.postMessage({ type: 'uploadStatus', value: progress, status: { status, data },  index });
+            self.postMessage({ type: 'uploadStatus', value: progress, status: { status, data }, index });
             
             chunkNumber++;
-            start = end;
-            end = start + chunkSize;
-
-            if (end > file.size) {
-              end = file.size;
-            }
 
             await uploadNextChunk();
           } catch (error) {
