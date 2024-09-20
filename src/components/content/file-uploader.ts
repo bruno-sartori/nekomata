@@ -1,9 +1,9 @@
-import { LitElement, html } from 'lit';
+import { LitElement, PropertyValues, html } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { fileUploaderStyle } from '../../styles/file-uploader.style';
 import { consume } from '@lit/context';
 import { contentContext, initialContentContext } from '../../contexts/content-context';
-import { ContentContext, SettingsContext } from '../../@types/contexts';
+import { ContentContext, SettingsContext, UserContext } from '../../@types/contexts';
 import UpdateContentContextEvent from '../../events/update-content-context';
 import ShowMetadataEvent from '../../events/show-metadata';
 import resumableFileUploadWorkerBlob from '../../workers/resumable-file-upload.worker';
@@ -12,6 +12,10 @@ import './metadata-info';
 import { Content } from '../../types';
 import { initialSettingsContext, settingsContext } from '../../contexts/settings-context';
 import { localized, msg } from '@lit/localize';
+import Fetcher from '../../utils/fetcher';
+import { PendingFile } from '../../@types/api';
+import { initialUserContext, userContext } from '../../contexts/user-context';
+import UpdateUserContextEvent from '../../events/update-user-context';
 
 @localized()
 @customElement('file-uploader')
@@ -26,6 +30,10 @@ export class FileUploader extends LitElement {
   @state()
   private settingsCtx: SettingsContext = initialSettingsContext;
 
+  @consume({ context: userContext, subscribe: true })
+  @state()
+  private userCtx: UserContext = initialUserContext;
+
   @state()
   metadataIdx: number = -1;
 
@@ -35,6 +43,11 @@ export class FileUploader extends LitElement {
     this.addEventListener(ShowMetadataEvent.eventName, ((e: ShowMetadataEvent) => {
       this.metadataIdx = e.detail.index;
     }) as EventListener);
+  }
+
+  protected override firstUpdated(_changedProperties: PropertyValues): void {
+    super.firstUpdated(_changedProperties);
+    this.initialize();
   }
 
   override render() {
@@ -69,6 +82,15 @@ export class FileUploader extends LitElement {
         .metadata=${this.contentCtx[this.metadataIdx]?.metadata}
       ></metadata-info>
     `;
+  }
+
+  private async initialize() {
+    const response = await Fetcher.get<{ data: PendingFile[] }>('/upload/pending', { withAuth: true });
+    
+    this.dispatchEvent(new UpdateUserContextEvent({ 
+      ...this.userCtx,
+      pendingUploads: response.data
+    }));
   }
 
   private onClick() {
@@ -194,8 +216,7 @@ export class FileUploader extends LitElement {
             }
           } break;
           case 'error': {
-            console.log('AQUIII')
-            console.log('error', event.data.index, event.data.error);
+            console.error('error', event.data.index, event.data.error);
             this.dispatchEvent(new UpdateContentContextEvent({ 
               ...this.contentCtx, 
               [event.data.index]: {
@@ -207,8 +228,19 @@ export class FileUploader extends LitElement {
           } break;
         }
       };
-      
-      worker.postMessage({ file: this.contentCtx[index].file, index });
+
+
+      const pending = this.userCtx.pendingUploads.find((pending) => pending.name === this.contentCtx[index].file.name);
+
+      console.log(`FIND PENDING`, pending, this.contentCtx[index].file.name, this.userCtx.pendingUploads)
+
+      const token = localStorage.getItem('token');
+      worker.postMessage({ 
+        file: this.contentCtx[index].file, 
+        token, 
+        index,
+        pending: pending ? pending : undefined, 
+      });
       index++;
     }
 

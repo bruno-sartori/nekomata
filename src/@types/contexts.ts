@@ -1,4 +1,5 @@
 import { Content, CurrentlyGrabbed, SeekableStyle } from "../types";
+import { PendingFile } from "./api";
 import { DeepOptional } from "./deep-optional";
 
 export type SettingsContext = {
@@ -6,6 +7,15 @@ export type SettingsContext = {
   language: 'pt-BR' | 'en' | 'es-ES';
 };
 export type SettingsContextUnreq = DeepOptional<SettingsContext>;
+
+// --------------------
+
+export type UserContext = {
+  name: string;
+  email: string;
+  pendingUploads: PendingFile[];
+};
+export type UserContextUnreq = DeepOptional<UserContext>;
 
 export type ContentContext = {
   [key: string]: Content;
