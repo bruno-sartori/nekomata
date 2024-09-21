@@ -284,6 +284,7 @@ Would love Pull requests that build towards these objectives and even ideas for 
  - [x] Integrity check
  - [x] Dynamize chunk size based on network settings on file upload initialization and throttle requests to avoid overcharging the server.
  - [ ] Change chunk size based on network settings when upload is in progress
+ - [ ] Improve performance using Rust WASM in front-end and back-end
 * Metadata generation
  - [x] Discover from filename if content is series or movie and get season/episode number
  - [x] Fetch video metadata from external APIs
