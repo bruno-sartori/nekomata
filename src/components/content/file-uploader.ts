@@ -226,6 +226,9 @@ export class FileUploader extends LitElement {
               }
             }));
           } break;
+          case 'info': {
+            console.log(event.data.message);
+          } break;
         }
       };
 
