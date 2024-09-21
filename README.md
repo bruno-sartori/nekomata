@@ -282,7 +282,8 @@ Would love Pull requests that build towards these objectives and even ideas for 
  - [x] Multipart Upload and Resumable Uploads -> Split file in smaller chunks to send them separately. Managing upload failures and being able to re-send files who fails without having to send the entire file again.
  - [x] Resume uploads even if the application was closed
  - [x] Integrity check
- - [ ] Dynamize chunk size based on network settings and throttle requests to avoid overcharging the server.
+ - [x] Dynamize chunk size based on network settings on file upload initialization and throttle requests to avoid overcharging the server.
+ - [ ] Change chunk size based on network settings when upload is in progress
 * Metadata generation
  - [x] Discover from filename if content is series or movie and get season/episode number
  - [x] Fetch video metadata from external APIs

@@ -3,8 +3,10 @@ export type LoginResponse = {
 };
 
 export type PendingFile = {
+  id: string;
   name: string;
   status: 'pending' | 'success' | 'error';
   chunkNumber: number;
   totalChunks: number;
-}
+  chunkSize: number;
+};
